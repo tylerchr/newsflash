@@ -33,7 +33,7 @@ class PostManagement {
 		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
 		
-		if ($stmt = $sql->mysqli->prepare('SELECT post_id, post_type, post_title, post_slug, post_author, post_text, post_link, post_image, post_date FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'])) {
+		if ($stmt = $sql->mysqli->prepare('SELECT post_id, post_type, post_title, post_slug, post_author, post_text, post_link, post_image, post_date FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' ORDER BY post_date DESC')) {
 			
 			$stmt->bind_result($pid, $ptype, $ptitle, $pslug, $pauthor, $ptext, $plink, $pimage, $pdate);
 			if ($stmt->execute()) {

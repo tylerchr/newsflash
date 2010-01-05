@@ -53,14 +53,29 @@ section.nf-post {
 	width: 100%;
 }
 
-.nf-post h2 a {
+.nf-post h1 {
+	margin: 0;
+	padding: 0;
+	
+	font-size: 1.6em;
+}
+
+.nf-post h1 a {
 	color: #33d;
 	text-decoration: none;
 }
 
-.nf-post h2:hover a {
+.nf-post h1:hover a {
 	color: #33f;
 	text-decoration: underline;
+}
+
+.nf-post h2 {
+	font-size: 1.2em;	
+}
+
+.nf-post-image img {
+	border: 5px solid black;
 }
 
 .nf-post-date {
