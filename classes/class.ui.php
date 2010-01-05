@@ -66,10 +66,10 @@ class ui {
 		}
 		
 		$post = '
-		<section class=\'nf_post\'>
+		<section class=\'nf-post\'>
 			<h2><a href="' . $nf['paths']['siteroot'] . 'post.php?post=' . $post->id . '">' . $post->title . '</a></h2>
 			' . $post_text . '
-			<span class=\'nf_post_date\'>Posted on ' . date("F j, Y @ g:i A", $post->date) . '</span>
+			<span class=\'nf-post-date\'>' . date("j F Y @ g:i A", $post->date) . '</span>
 		</section>';
 		
 		return $post;
