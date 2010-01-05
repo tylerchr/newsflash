@@ -16,6 +16,7 @@ class PageConfig {
 		
 		$this->type = $type;
 		$this->tags = array(
+			'%nf_title%' => "",
 			'%nf_headscape%' => "",
 			'%dev_content%' => "Content!",
 			'%nf_end%' => "<hr /a><span style='font-family:Verdana; font-size:0.9em; background-color:#FFFF99; margin:10px;'>End of the page</span>");

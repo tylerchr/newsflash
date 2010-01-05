@@ -14,4 +14,9 @@ $nf['database']['database'] =		'newsflash';
 $nf['database']['table_prefix'] =	'nf_';
 $nf['database']['post_table'] =		'posts';
 
+$nf['template']['main'] =			'main.html';
+$nf['template']['post_text'] =		'post_text.html';
+$nf['template']['post_link'] =		'post_link.html';
+$nf['template']['post_image'] =		'post_image.html';
+
 ?>

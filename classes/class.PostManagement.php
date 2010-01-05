@@ -96,7 +96,9 @@ class PostManagement {
 			echo $sql->mysqli->error;	
 		}
 		
-		return false;	}
+		return false;
+	
+	}
 		
 }
 

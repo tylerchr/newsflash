@@ -56,9 +56,6 @@ section.nf-post {
 .nf-post h2 a {
 	color: #33d;
 	text-decoration: none;
-	
-	display: block;
-	width: 100%;
 }
 
 .nf-post h2:hover a {
