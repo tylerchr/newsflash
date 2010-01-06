@@ -7,3 +7,21 @@
 	- Site naming
 	- Timezone support
 - Rethink tag replacement
+- Pages
+- Write better documentation
+
+# Longer-term Features #
+
+- Administration backend
+- Plugins and extensibility
+- Automated caching system
+- Security
+- Installer
+- Comments (gravatar)
+
+# Considerations #
+
+- Automatic updating, a la WordPress
+- User-friendly but powerful theme generator
+- Refactor the tag-replacement system
+- Media manager
