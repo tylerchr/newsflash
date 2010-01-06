@@ -13,6 +13,8 @@ $nf['database']['password'] =		'newsflashpw';
 $nf['database']['database'] =		'newsflash';
 $nf['database']['table_prefix'] =	'nf_';
 $nf['database']['post_table'] =		'posts';
+$nf['database']['category_table'] =	'categories';
+$nf['database']['user_table'] =		'users';
 
 $nf['template']['main'] =			'main.html';
 $nf['template']['post_text'] =		'post_text.html';

@@ -16,6 +16,8 @@ class post {
 	public $link;
 	public $image;
 	public $date;
+	public $category;
+	public $tags;
 	
 	public function __construct() {
 		
@@ -28,6 +30,33 @@ class post {
 		$this->author =	'';
 		$this->text =	'';
 		$this->date =	time();
+		$this->category='';
+		$this->tags =	'';
+	}
+	
+	public function TagCloud() {
+		$tags = explode(";", $this->tags);
+		if (count($tags) > 0) {
+			foreach($tags as $value) {
+				if (strlen($value) > 0) {
+					$taglist[] = $value;
+				}
+			}
+			
+			$tm = new TagManagement();
+			if (count($taglist) > 0) {
+				foreach($taglist as $value) {
+					$tagstring .= $tm->FormatTag($value);
+				}
+				
+				return $tagstring;
+			} else {
+				return "No tags";	
+			}
+			
+		} else {
+			return "No tags";	
+		}
 	}
 	
 	public function AsJSON() {
@@ -38,7 +67,9 @@ class post {
 			'slug' => $this->slug,
 			'author' => $this->author,
 			'text' => $this->text,
-			'date' => $this->date);
+			'date' => $this->date,
+			'category' => $this->category,
+			'tags' => $this->tags);
 			
 		return json_encode($array);
 	}

@@ -11,6 +11,7 @@ class PageConfig {
 	public $tags;
 	
 	public $SinglePostID;
+	public $listCategoryID;
 	
 	public function __construct($type) {
 		

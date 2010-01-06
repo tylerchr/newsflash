@@ -12,7 +12,10 @@ $classlist = array(	'ui',
 					'mysql',
 					'post',
 					'PostManagement',
-					'PageConfig'
+					'PageConfig',
+					'Category',
+					'CategoryManagement',
+					'TagManagement'
 				  );
 
 foreach ($classlist as $name) {

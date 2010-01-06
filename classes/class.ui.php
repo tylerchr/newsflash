@@ -30,7 +30,7 @@ class ui {
 		}
 	}
 	
-	public function buildPage($PageConfig) {
+	public function buildPage($PageConfig) {					
 		require(dirname(__FILE__) . '/../configuration.php');
 		require($nf['paths']['absolute'] . 'packages/packages.php');
 
@@ -48,15 +48,57 @@ class ui {
 		
 		if ($PageConfig->type == 'single') {
 			$PageConfig->tags['%nf_posts%'] = $this->GetSinglePost($PageConfig->SinglePostID);
-		} else if ($PageConfig->type = 'all') {
+		} else if ($PageConfig->type == 'all') {
 			$PageConfig->tags['%nf_posts%'] = $this->GetAllPosts($PageConfig->SinglePostID);
+		} else if ($PageConfig->type == 'category') {
+			$PageConfig->tags['%nf_posts%'] = $this->GetCategoryPosts($PageConfig->listCategoryID);	
 		}
+		
+		$PageConfig->tags['%nf_category_list%'] = $this->GetCategoryList();
+		$PageConfig->tags['%nf_tag_list%'] = $this->GetTagList();
 		
 		$mainpage = $this->ReplaceTags($PageConfig->tags, $mainpage);
 		
 		
 		// Show the final result
 		echo $mainpage;
+	}
+	
+	public function GetCategoryList() {
+		$cm = new CategoryManagement();
+		$cats = $cm->GetListOfUsedCategories();
+		if (count($cats) > 0) {
+			foreach ($cats as $key => $value) {
+				$categories[$cm->CategoryNameWithID($key)]['id'] = $key;
+				$categories[$cm->CategoryNameWithID($key)]['count'] = $value;
+			}
+			ksort($categories);
+			
+			$menu = '<h3>Categories</h3><ul class="category-list">';
+			foreach($categories as $key => $value) {
+				$menu .= '<li class="category-list-item"><a href="category.php?cid=' . $value['id'] . '">' . $key . ' (' . $value['count'] . ')</a></li>';
+			}
+			$menu .= '</ul>';
+		}
+	
+		return $menu;
+	}
+	
+	public function GetTagList() {
+		$tm = new TagManagement();
+		$tags = $tm->GetAllTags();
+		
+		foreach ($tags as $key => $value) {
+			$new_tag_list[] = $key;
+		}
+		sort($new_tag_list);
+		
+		$tag_list = '<h3>Tags</h3><ul class="tag-list">';
+		foreach ($new_tag_list as $value) {
+			$tag_list .= '<li class="tag-list-item">' . $tm->FormatTag($value) . '</li>';
+		}
+		$tag_list .= '</ul>';
+		return $tag_list;
 	}
 	
 	public function GetSinglePost($post_id) {
@@ -67,6 +109,15 @@ class ui {
 	public function GetAllPosts() {
 		$pm = new PostManagement();
 		$posts = $pm->GetPosts();
+		foreach ($posts as $single_post) {
+			$post_all .= $this->FormatPost($single_post);
+		}
+		return $post_all;
+	}
+	
+	public function GetCategoryPosts($cat_id) {
+		$pm = new PostManagement();
+		$posts = $pm->GetPostsFromCategory($cat_id);
 		foreach ($posts as $single_post) {
 			$post_all .= $this->FormatPost($single_post);
 		}
@@ -110,9 +161,11 @@ class ui {
 			'%nf_post_title%' => $post->title,
 			'%nf_post_date%' => date("j F Y", $post->date),
 			'%nf_post_time%' => date("g:i A", $post->date),
+			'%nf_post_tags%' => $post->TagCloud(),
 			'%nf_text_content%' => $post_text,
 			'%nf_link_link%' => $post->link,
-			'%nf_image_image%' => $post->image);
+			'%nf_image_image%' => $post->image,
+			'%nf_post_category%' => $post->category);
 
 		// Get template for a post		
 		switch ($post->type) {

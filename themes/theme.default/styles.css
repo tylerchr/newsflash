@@ -27,10 +27,26 @@ h1 {
 	padding: 10px;	
 }
 
+h3 {
+	margin: 0;
+	padding: 0;
+	
+	margin-bottom: 10px;	
+}
+
 #container {
 	width: 960px;
 	margin-left: auto;
 	margin-right: auto;
+	
+	position: relative;
+}
+
+#sidebar {
+	position: absolute;
+	top: 0;
+	right: 20px;
+	width: 200px;
 }
 
 #footer {
@@ -65,7 +81,7 @@ section.nf-post {
 	text-decoration: none;
 }
 
-.nf-post h1:hover a {
+.nf-post h1 a:hover {
 	color: #33f;
 	text-decoration: underline;
 }
@@ -90,4 +106,31 @@ section.nf-post {
 	-webkit-border-radius: 5px;	
 	
 	font-style: italic;
+}
+
+ul.tag-list {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;	
+	
+	text-align: center;
+}
+
+ul.tag-list li {
+	display: inline-block;
+}
+
+ul.tag-list li a {
+	display: inline-block;
+	padding: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
+	
+	text-decoration: none;
+	-webkit-border-radius: 5px;
+}
+
+ul.tag-list li a:hover {
+	background-color: blue;
+	color: white;	
 }
