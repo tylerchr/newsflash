@@ -3,6 +3,7 @@ body {
 	padding: 0;
 	
 	font-family: Helvetica, Arial, Verdana;
+	background-color: #fff;
 }
 
 a {
@@ -32,6 +33,7 @@ h1 {
 	padding: 10px;
 	
 	font-weight: normal;
+	text-shadow: 1px 1px #ddd;
 }
 
 h3 {
@@ -75,6 +77,20 @@ h3 {
 	padding: 0;
 	margin-left: 20px;
 	margin-bottom: 20px;
+}
+
+#sidebar form {
+	margin-bottom: 20px;	
+}
+
+#sidebar form input[type="search"] {
+	width: 190px;
+	padding: 15px;
+	margin-right: 10px;
+}
+
+#sidebar form input[type="submit"] {
+	width: 30px;
 }
 
 #sidebar ul li {
