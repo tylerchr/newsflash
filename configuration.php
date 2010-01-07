@@ -3,7 +3,7 @@
 /* configuration.php */
 
 $nf['blog']['title'] =				'The Newsflash Blog';
-$nf['blog']['subtitle'] =			'Blogging about a way to blog';
+$nf['blog']['subtitle'] =			'Blogging about a new way to blog';
 $nf['blog']['timezone'] =			-7;
 
 $nf['paths']['siteroot'] =			'http://jauntyserv.local/newsflash/';

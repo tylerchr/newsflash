@@ -28,6 +28,15 @@ header {
 	font-family: 'Lucida Grande', Verdana, 'Bitstream Vera Sans', Arial, sans-serif;
 }
 
+header h1 a {
+	color: #333;	
+}
+
+header h1 a:hover {
+	color: #2fa6e9;
+	text-decoration: none;
+}
+
 header h2 {
 	margin: 0;
 	padding: 0;

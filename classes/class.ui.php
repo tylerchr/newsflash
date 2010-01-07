@@ -50,14 +50,25 @@ class ui {
 		$pm = new PostManagement();
 		if ($PageConfig->type == 'single') {
 			$posts = $pm->GetCertainPost($PageConfig->SinglePostID);
+			$PageConfig->tags['%nf_page_title%'] = $posts[0]->title . ' - ' . $nf['blog']['title'];
 		} else if ($PageConfig->type == 'all') {
 			$posts = $pm->GetPosts();
+			$PageConfig->tags['%nf_page_title%'] = $nf['blog']['title'];
 		} else if ($PageConfig->type == 'category') {
-			$posts = $pm->GetPostsFromCategory($PageConfig->listCategoryID);	
+			$posts = $pm->GetPostsFromCategory($PageConfig->listCategoryID);
+			$cm = new CategoryManagement();
+			$category = $cm->GetCategoryWithID($PageConfig->listCategoryID);
+			$cname = $category->name;
+			if (strlen($cname) == 0) {
+				$cname = 'Unfiled';	
+			}
+			$PageConfig->tags['%nf_page_title%'] = $cname . ' - ' . $nf['blog']['title'];
 		} else if ($PageConfig->type == 'tag') {
 			$posts = $pm->GetPostsTaggedWith($PageConfig->listTag);
+			$PageConfig->tags['%nf_page_title%'] = 'Tagged with \'' . $PageConfig->listTag . '\' - ' . $nf['blog']['title'];
 		} else if ($PageConfig->type == 'search') {
 			$posts = $pm->GetPostsMatchingQuery($PageConfig->searchQuery);
+			$PageConfig->tags['%nf_page_title%'] = 'Results for \'' . $PageConfig->searchQuery . '\' - ' . $nf['blog']['title'];
 		} else if ($PageConfig->type == 'archive') {
 			$posts = $pm->GetPostsFrom($PageConfig->archive['year'], $PageConfig->archive['month'], $PageConfig->archive['day']);
 		}
@@ -71,6 +82,8 @@ class ui {
 			$PageConfig->tags['%nf_posts%'] = '<p class="nf-error-text">There aren\'t any posts to show here!</p>';
 		}
 		
+		// $PageConfig->tags['%nf_site_root%'] = $nf['paths']['siteroot'];
+		$PageConfig->tags['%nf_site_root%'] = '../../';
 		$PageConfig->tags['%nf_category_list%'] = $this->GetCategoryList();
 		$PageConfig->tags['%nf_tag_list%'] = $this->GetTagList();
 		$PageConfig->tags['%nf_archive_list%'] = $this->GetArchivesList();
