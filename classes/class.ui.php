@@ -46,22 +46,40 @@ class ui {
 		// Clean up pathnames, make them absolute
 		$mainpage = $this->AbsolutifyPathnames($this->theme_url, $mainpage);
 		
+		// Generate the contents of the page, based on the given PageConfig object
+		$pm = new PostManagement();
 		if ($PageConfig->type == 'single') {
-			$PageConfig->tags['%nf_posts%'] = $this->GetSinglePost($PageConfig->SinglePostID);
+			$posts = $pm->GetCertainPost($PageConfig->SinglePostID);
 		} else if ($PageConfig->type == 'all') {
-			$PageConfig->tags['%nf_posts%'] = $this->GetAllPosts($PageConfig->SinglePostID);
+			$posts = $pm->GetPosts();
 		} else if ($PageConfig->type == 'category') {
-			$PageConfig->tags['%nf_posts%'] = $this->GetCategoryPosts($PageConfig->listCategoryID);	
+			$posts = $pm->GetPostsFromCategory($PageConfig->listCategoryID);	
+		} else if ($PageConfig->type == 'tag') {
+			$posts = $pm->GetPostsTaggedWith($PageConfig->listTag);
+		} else if ($PageConfig->type == 'search') {
+			$posts = $pm->GetPostsMatchingQuery($PageConfig->searchQuery);
+		} else if ($PageConfig->type == 'archive') {
+			$posts = $pm->GetPostsFrom($PageConfig->archive['year'], $PageConfig->archive['month'], $PageConfig->archive['day']);
+		}
+		
+		// If we returned an array, assume it's of posts and format accordingly, otherwise just pass it on
+		if (is_array($posts)) {
+			$PageConfig->tags['%nf_posts%'] = $this->FormatPostListing($posts);
+		} else if (strlen($posts) > 0) {
+			$PageConfig->tags['%nf_posts%'] = $posts;
+		} else {
+			$PageConfig->tags['%nf_posts%'] = '<p class="nf-error-text">There aren\'t any posts to show here!</p>';
 		}
 		
 		$PageConfig->tags['%nf_category_list%'] = $this->GetCategoryList();
 		$PageConfig->tags['%nf_tag_list%'] = $this->GetTagList();
+		$PageConfig->tags['%nf_archive_list%'] = $this->GetArchivesList();
 		
+		// Replace the tags with actual data
 		$mainpage = $this->ReplaceTags($PageConfig->tags, $mainpage);
-		
-		
-		// Show the final result
-		echo $mainpage;
+
+		// Send back the final result
+		return $mainpage;
 	}
 	
 	public function GetCategoryList() {
@@ -74,7 +92,7 @@ class ui {
 			}
 			ksort($categories);
 			
-			$menu = '<h3>Categories</h3><ul class="category-list">';
+			$menu = '<ul class="category-list">';
 			foreach($categories as $key => $value) {
 				$menu .= '<li class="category-list-item"><a href="category.php?cid=' . $value['id'] . '">' . $key . ' (' . $value['count'] . ')</a></li>';
 			}
@@ -93,7 +111,7 @@ class ui {
 		}
 		sort($new_tag_list);
 		
-		$tag_list = '<h3>Tags</h3><ul class="tag-list">';
+		$tag_list = '<ul class="tag-list">';
 		foreach ($new_tag_list as $value) {
 			$tag_list .= '<li class="tag-list-item">' . $tm->FormatTag($value) . '</li>';
 		}
@@ -101,27 +119,30 @@ class ui {
 		return $tag_list;
 	}
 	
-	public function GetSinglePost($post_id) {
+	public function GetArchivesList() {
 		$pm = new PostManagement();
-		return $this->FormatPost($pm->GetCertainPost($post_id));
+		$dates = $pm->GetPostDates();
+		if (count($dates) > 0) {
+			$archive_list = '<ul>';
+			foreach ($dates as $key => $value) {
+				$archive_list .= '<li class="archive-list-item"><a href="archive.php?year=' . $value['year'] . '&month=' . $value['month'] . '">' . $key . ' (' . $value['count'] . ')</a></li>';
+			}
+			$archive_list .= '</ul>';
+		} else {
+			$archive_list = '<ul><li>No Archives</li></ul>';	
+		}
+		return $archive_list;
 	}
 	
-	public function GetAllPosts() {
-		$pm = new PostManagement();
-		$posts = $pm->GetPosts();
-		foreach ($posts as $single_post) {
-			$post_all .= $this->FormatPost($single_post);
+	public function FormatPostListing($posts) {
+		if (count($posts) > 0) {
+			foreach ($posts as $single_post) {
+				$post_all .= $this->FormatPost($single_post);
+			}
+			return $post_all;
+		} else {
+			return "No posts";	
 		}
-		return $post_all;
-	}
-	
-	public function GetCategoryPosts($cat_id) {
-		$pm = new PostManagement();
-		$posts = $pm->GetPostsFromCategory($cat_id);
-		foreach ($posts as $single_post) {
-			$post_all .= $this->FormatPost($single_post);
-		}
-		return $post_all;
 	}
 	
 	public function ReplaceTags($tags, $content) {
@@ -153,19 +174,22 @@ class ui {
 			$post_text = $post->text;
 		}
 		
+		
+		$core = new Core();
 		$tags = array(
 			'%nf_siteroot%' => $nf['paths']['siteroot'],
 			'%nf_post_permalink%' => $nf['paths']['siteroot'] . 'post.php?post=' . $post->id,
 			'%nf_post_id%' => $post->id,
 			'%nf_post_type%' => $post->type,
 			'%nf_post_title%' => $post->title,
-			'%nf_post_date%' => date("j F Y", $post->date),
-			'%nf_post_time%' => date("g:i A", $post->date),
+			'%nf_post_author%' => $post->author,
+			'%nf_post_date%' => date("j F Y", $core->TimeFromUniversal($post->date)),
+			'%nf_post_time%' => date("g:i A", $core->TimeFromUniversal($post->date)),
 			'%nf_post_tags%' => $post->TagCloud(),
 			'%nf_text_content%' => $post_text,
 			'%nf_link_link%' => $post->link,
 			'%nf_image_image%' => $post->image,
-			'%nf_post_category%' => $post->category);
+			'%nf_post_category%' => '<a href="category.php?cid=' . $post->category_id . '">' . $post->category . '</a>');
 
 		// Get template for a post		
 		switch ($post->type) {

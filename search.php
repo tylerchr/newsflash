@@ -14,12 +14,9 @@ $fakepost = new post();
 $fakepost->randomPost();
 
 $pm = new PostManagement();
-// if ($pm->SavePost($fakepost)) {
-	//echo "New post saved: " . $fakepost->title;	
-// }
-
 $ui = new ui();
-$pc = new PageConfig('all');
+$pc = new PageConfig('search');
+$pc->searchQuery = $_GET['q'];
 echo $ui->buildPage($pc);
 
 ?>

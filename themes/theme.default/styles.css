@@ -23,14 +23,28 @@ header {
 	border-bottom: 1px solid #eee;
 	
 	margin-top: 100px;
-	margin-bottom: 40px;
 	
 	width: 680px;
+	font-family: 'Lucida Grande', Verdana, 'Bitstream Vera Sans', Arial, sans-serif;
+}
+
+header h2 {
+	margin: 0;
+	padding: 0;
+	
+	font-size: 0.8em;
+	color: #666;
+	
+	font-weight: normal;
+	text-transform: uppercase;
+	letter-spacing: 0.2em;
+	margin-bottom: 5px;
 }
 
 h1 {
 	margin: 0;
-	padding: 10px;
+	padding: 0;
+	padding-bottom: 10px;
 	
 	font-weight: normal;
 	text-shadow: 1px 1px #ddd;
@@ -121,7 +135,7 @@ h3 {
 
 section.nf-post {
 	display: block;
-	margin-bottom: 30px;
+	margin-bottom: 40px;
 	width: 100%;
 }
 
@@ -135,6 +149,7 @@ section.nf-post {
 
 .nf-post h1 {
 	margin: 0;
+	margin-bottom: 15px;
 	padding: 0;
 	
 	font-size: 1.6em;
@@ -142,6 +157,10 @@ section.nf-post {
 
 .nf-post h2 {
 	font-size: 1.2em;	
+}
+
+.nf-post .linkpost {
+	color: #2fb9a6;
 }
 
 .nf-post a {
@@ -161,16 +180,48 @@ section.nf-post {
 	border: 5px solid black;
 }
 
-.nf-post-date {
-	display: inline-block;
+.nf-post-meta {
+	font-size: 0.9em;
+	display: block;
+	text-align: left;
+	width: 100%;
 	
-	padding: 5px;
-	padding-left: 15px;
-	padding-right: 15px;
+	color: #bbb;
+}
+
+.nf-post-meta a {
+	font-weight: bold;
+	color: #888;
+}
+
+.nf-post-meta .nf-post-meta-data {
+	font-weight: bold;
+	color: #888;
+}
+
+.nf-post-subhead {
+	font-size: 1.0em;
+	font-weight: bold;
 	
-	background-color: #f2f2ea;
-	border: 1px solid #eee;
-	-webkit-border-radius: 5px;	
+	text-transform: uppercase;
+	letter-spacing: 0.2em;
+}
+
+.nf-post-subhead-date {	
+	color: #ddd;
+}
+
+.nf-post-subhead-type {
+	color: #666;	
+}
+
+.nf-error-text {
+	display: block;
+	width: 100%;
+	text-align: center;
+	color: #a00;
+	margin-top: 100px;
+	margin-bottom: 100px;
 	
 	font-style: italic;
 }

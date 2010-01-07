@@ -1,11 +1,5 @@
 # Newsflash To-Do #
 
-- Finish tags
-- Archives
-- Search
-- Global site settings
-	- Site naming
-	- Timezone support
 - Rethink tag replacement
 - Pages
 - Write better documentation
@@ -25,3 +19,4 @@
 - User-friendly but powerful theme generator
 - Refactor the tag-replacement system
 - Media manager
+- Clean URLs

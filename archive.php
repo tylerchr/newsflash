@@ -10,16 +10,12 @@ require('configuration.php');
 
 // Needs to include code for fancy URL rewriting someday
 
-$fakepost = new post();
-$fakepost->randomPost();
-
 $pm = new PostManagement();
-// if ($pm->SavePost($fakepost)) {
-	//echo "New post saved: " . $fakepost->title;	
-// }
-
 $ui = new ui();
-$pc = new PageConfig('all');
+$pc = new PageConfig('archive');
+$pc->archive['year'] = $_GET['year'];
+$pc->archive['month'] = $_GET['month'];
+$pc->archive['day'] = $_GET['day'];
 echo $ui->buildPage($pc);
 
 ?>

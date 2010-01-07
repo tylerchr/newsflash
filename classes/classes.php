@@ -8,7 +8,8 @@
 $path = dirname(__FILE__) . '/';
 require($path . '../configuration.php');
 
-$classlist = array(	'ui',
+$classlist = array(	'Core',
+					'ui',
 					'mysql',
 					'post',
 					'PostManagement',

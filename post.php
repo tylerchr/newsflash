@@ -14,6 +14,6 @@ $pc = new PageConfig('single');
 $pc->SinglePostID = intval($_GET['post']);
 
 $ui = new ui();
-$ui->buildPage($pc);
+echo $ui->buildPage($pc);
 
 ?>

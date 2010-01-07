@@ -17,6 +17,7 @@ class post {
 	public $image;
 	public $date;
 	public $category;
+	public $category_id;
 	public $tags;
 	
 	public function __construct() {
@@ -41,6 +42,10 @@ class post {
 				if (strlen($value) > 0) {
 					$taglist[] = $value;
 				}
+			}
+			
+			if (count($taglist) > 0) {
+				sort($taglist);
 			}
 			
 			$tm = new TagManagement();

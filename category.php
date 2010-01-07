@@ -21,6 +21,6 @@ $pm = new PostManagement();
 $ui = new ui();
 $pc = new PageConfig('category');
 $pc->listCategoryID = intval($_GET['cid']);
-$ui->buildPage($pc);
+echo $ui->buildPage($pc);
 
 ?>
