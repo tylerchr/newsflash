@@ -10,10 +10,6 @@ require('configuration.php');
 
 // Needs to include code for fancy URL rewriting someday
 
-$fakepost = new post();
-$fakepost->randomPost();
-
-$pm = new PostManagement();
 $ui = new ui();
 $pc = new PageConfig('tag');
 $pc->listTag = $_GET['tag'];

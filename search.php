@@ -10,7 +10,6 @@ require('configuration.php');
 
 // Needs to include code for fancy URL rewriting someday
 
-$pm = new PostManagement();
 $ui = new ui();
 $pc = new PageConfig('search');
 $pc->searchQuery = $_GET['q'];

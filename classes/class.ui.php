@@ -192,7 +192,7 @@ class ui {
 					
 					$post_all .=	'<li>' .
 									'	<span class="nf-post-subhead nf-post-subhead-date">' . date("j M", $single_post->date) . '</span>' .
-									'	<h2><a href="#">' . $single_post->title . '</a></h2>' .
+									'	<h2><a href="post.php?post=' . $single_post->id . '">' . $single_post->title . '</a></h2>' .
 									'</li>';
 				}
 				return $post_all;
