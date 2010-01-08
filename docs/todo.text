@@ -1,19 +1,17 @@
 # Newsflash To-Do #
 
-- Rethink tag replacement
-- Pages
+- Refactoring -- this is getting messy
 - Write better documentation
-- Authors
 
 # Longer-term Features #
 
+- Automated caching system
 - Administration backend
 - Plugins and extensibility
-- Automated caching system
 - Security
 - Installer
-- Comments (gravatar)
 - Facebook / Twitter integration
+- Comments (gravatar)
 
 # Considerations #
 
