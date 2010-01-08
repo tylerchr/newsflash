@@ -31,11 +31,11 @@ class AuthorManagement {
 		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
 		
-		$query = 'SELECT author_id, author_first_name, author_last_name, author_pwhash, author_email, author_bio, author_created_date FROM ' . $nf['database']['table_prefix'] . $nf['database']['author_table'] . ' WHERE ' . $where;
+		$query = 'SELECT author_id, author_first_name, author_last_name, author_pwhash, author_email, author_bio, author_homepage, author_created_date FROM ' . $nf['database']['table_prefix'] . $nf['database']['author_table'] . ' WHERE ' . $where;
 		if ($stmt = $sql->mysqli->prepare($query)) {
 			
 			$stmt->bind_param($type, $param);
-			$stmt->bind_result($aid, $afirstname, $alastname, $apasswordhash, $aemail, $abio, $acreateddate);
+			$stmt->bind_result($aid, $afirstname, $alastname, $apasswordhash, $aemail, $abio, $ahomepage, $acreateddate);
 			if ($stmt->execute()) {
 				while ($stmt->fetch()) {
 					$author = new Author();
@@ -45,6 +45,7 @@ class AuthorManagement {
 					$author->password_hash = $apasswordhash;
 					$author->email = $aemail;
 					$author->bio = $abio;
+					$author->homepage = $ahomepage;
 					$author->created_at = $acreateddate;
 					$authors[] = $author;
 				}

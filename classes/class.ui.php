@@ -265,11 +265,19 @@ class ui {
 				}
 			}
 			
+			// Markdownify their bio
+			if ($pf->PackageEnabled('markdown') && !function_exists('Markdown')) {
+				$markdown_path = $nf['paths']['absolute'] . 'packages/pkg.markdown/markdown.php';
+				require($markdown_path);
+			}
+			$bio = Markdown($post->bio);
+			
 			// Assign author-related tags
 			$tags->nf_author_name =		$post->first_name . ' ' . $post->last_name;
 			$tags->nf_author_permalink =	$nf['paths']['siteroot'] . 'author.php?author=' . $post->id;
 			$tags->nf_author_email =	$post->email;
-			$tags->nf_author_bio =		$post->bio;
+			$tags->nf_author_bio =		$bio;
+			$tags->nf_author_homepage =	$post->homepage;
 			$tags->nf_author_avatar =	$gravatar;
 			
 			$PageConfig2 = $PageConfig;

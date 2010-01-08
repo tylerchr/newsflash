@@ -4,7 +4,8 @@
 		<div id="author-meta">
 			<h1>Posts by <a href="<?php echo $tags->nf_author_permalink; ?>"><?php echo $tags->nf_author_name; ?></a></h1>
 			<p><?php echo $tags->nf_author_bio; ?></p>
-			<span class="nf-post-meta">contact <a href="mailto:<?php echo $tags->nf_author_email; ?>"><?php echo $tags->nf_author_email; ?></a></span>
+			<span class="nf-post-meta">homepage <a href="<?php echo $tags->nf_author_homepage; ?>"><?php echo str_ireplace('http://', '', $tags->nf_author_homepage); ?></a></span>
+			<span class="nf-post-meta">email <a href="mailto:<?php echo $tags->nf_author_email; ?>"><?php echo $tags->nf_author_email; ?></a></span>
 		</div>
 	</div>
 </section>

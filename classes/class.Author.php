@@ -13,6 +13,7 @@ class Author {
 	public $password_hash;
 	public $email;
 	public $bio;
+	public $homepage;
 	public $created_at;
 	
 	public function __construct() {
@@ -22,9 +23,10 @@ class Author {
 		$this->id =				-1;	
 		$this->first_name =		NULL;
 		$this->last_name =		NULL;
-		$this->password_hash =	'';
-		$this->email =			'';
-		$this->bio =			'';
+		$this->password_hash =	NULL;
+		$this->email =			NULL;
+		$this->bio =			NULL;
+		$this->homepage =		NULL;
 		$this->created_at =		time();
 	}
 		
