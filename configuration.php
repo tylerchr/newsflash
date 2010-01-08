@@ -17,12 +17,17 @@ $nf['database']['password'] =		'newsflashpw';
 $nf['database']['database'] =		'newsflash';
 $nf['database']['table_prefix'] =	'nf_';
 $nf['database']['post_table'] =		'posts';
+$nf['database']['page_table'] =		'pages';
 $nf['database']['category_table'] =	'categories';
-$nf['database']['user_table'] =		'users';
+$nf['database']['author_table'] =	'authors';
 
-$nf['template']['main'] =			'main.html';
+$nf['template']['main'] =			'main.php';
+$nf['template']['page'] =			'page.html';
+$nf['template']['author'] =			'author.html';
 $nf['template']['post_text'] =		'post_text.html';
 $nf['template']['post_link'] =		'post_link.html';
 $nf['template']['post_image'] =		'post_image.html';
+
+$nf['error']['no_posts'] =			'<p class="nf-error-text">There aren\'t any posts to show here!</p>';
 
 ?>

@@ -1,7 +1,7 @@
 <section class="nf-post nf-post-image">
-	<span class="nf-post-subhead nf-post-subhead-date">%nf_post_date%</span> <span class="nf-post-subhead nf-post-subhead-type">[%nf_post_type%]</span>
-	<h1><a href="%nf_post_permalink%">%nf_post_title%</a></h1>
-	<p><img src="%nf_image_image%" /></p>
-	<p>%nf_text_content%</p>
-	<span class="nf-post-meta"><a href="%nf_post_permalink%">#</a> Posted in <span class="nf-post-meta-data">%nf_post_category%</span> with tags %nf_post_tags%</span>
+	<span class="nf-post-subhead nf-post-subhead-date"><?php echo $tags->nf_post_date; ?></span> <span class="nf-post-subhead nf-post-subhead-type"><?php echo $tags->nf_post_type; ?></span>
+	<h1><a href="<?php echo $tags->nf_post_permalink; ?>"><?php echo $tags->nf_post_title; ?></a></h1>
+	<p><img src="<?php echo $tags->nf_image_image; ?>" /></p>
+	<p><?php echo $tags->nf_post_text; ?></p>
+	<span class="nf-post-meta"><a href="<?php echo $tags->nf_post_permalink; ?>">#</a> Posted by <span class="nf-post-meta-data"><?php echo $tags->nf_post_author; ?></span> in <span class="nf-post-meta-data"><?php echo $tags->nf_post_category; ?></span> with tags <?php echo $tags->nf_post_tags; ?></span>
 </section>

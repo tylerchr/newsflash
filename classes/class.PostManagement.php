@@ -40,13 +40,15 @@ class PostManagement {
 				while ($stmt->fetch()) {
 					
 					$cm = new CategoryManagement();
+					$am = new AuthorManagement();
 					
 					$post = new post();
 					$post->id = $pid;
 					$post->type = $ptype;
 					$post->title = $ptitle;
 					$post->slug = $pslug;
-					$post->author = $pauthor;
+					$post->author_id = $pauthor;
+					$post->author = $am->GetAuthorNameForID($pauthor);
 					$post->text = $ptext;
 					$post->link = $plink;
 					$post->image = $pimage;
@@ -89,13 +91,61 @@ class PostManagement {
 				while ($stmt->fetch()) {
 					
 					$cm = new CategoryManagement();
+					$am = new AuthorManagement();
 					
 					$post = new post();
 					$post->id = $pid;
 					$post->type = $ptype;
 					$post->title = $ptitle;
 					$post->slug = $pslug;
-					$post->author = $pauthor;
+					$post->author_id = $pauthor;
+					$post->author = $am->GetAuthorNameForID($pauthor);
+					$post->text = $ptext;
+					$post->link = $plink;
+					$post->image = $pimage;
+					$post->date = $pdate;
+					$post->category = $cm->CategoryNameWithID($pcategory);
+					$post->category_id = $pcategory;
+					$post->tags = $ptags;
+					
+					$posts[$pid] = $post;
+				}
+				return $posts;
+			} else {
+				echo $sql->error();	
+			}
+		
+		} else {
+			echo $sql->mysqli->error;	
+		}
+		
+		return false;
+			
+	}
+	
+	public function GetPostsByAuthor($author_id) {
+		
+		require(dirname(__FILE__) . '/../configuration.php');
+		$sql = new mysql();
+		
+		if ($stmt = $sql->mysqli->prepare('SELECT post_id, post_type, post_title, post_slug, post_author, post_text, post_link, post_image, post_date, post_category, post_tags FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' WHERE post_author = ? ORDER BY post_date DESC')) {
+			
+			
+			$stmt->bind_param("i", $author_id);
+			$stmt->bind_result($pid, $ptype, $ptitle, $pslug, $pauthor, $ptext, $plink, $pimage, $pdate, $pcategory, $ptags);
+			if ($stmt->execute()) {
+				while ($stmt->fetch()) {
+					
+					$cm = new CategoryManagement();
+					$am = new AuthorManagement();
+					
+					$post = new post();
+					$post->id = $pid;
+					$post->type = $ptype;
+					$post->title = $ptitle;
+					$post->slug = $pslug;
+					$post->author_id = $pauthor;
+					$post->author = $am->GetAuthorNameForID($pauthor);
 					$post->text = $ptext;
 					$post->link = $plink;
 					$post->image = $pimage;
@@ -144,7 +194,7 @@ class PostManagement {
 			}
 		
 		} else {
-			echo $sql->mysqli->error;	
+			echo $sql->mysqli->error;
 		}
 		
 		return false;
@@ -163,13 +213,15 @@ class PostManagement {
 					$stmt->fetch();
 					
 					$cm = new CategoryManagement();
+					$am = new AuthorManagement();
 					
 					$post = new post();
 					$post->id = $pid;
 					$post->type = $ptype;
 					$post->title = $ptitle;
 					$post->slug = $pslug;
-					$post->author = $pauthor;
+					$post->author_id = $pauthor;
+					$post->author = $am->GetAuthorNameForID($pauthor);
 					$post->text = $ptext;
 					$post->link = $plink;
 					$post->image = $pimage;
@@ -205,13 +257,15 @@ class PostManagement {
 				while ($stmt->fetch()) {
 					
 					$cm = new CategoryManagement();
+					$am = new AuthorManagement();
 					
 					$post = new post();
 					$post->id = $pid;
 					$post->type = $ptype;
 					$post->title = $ptitle;
 					$post->slug = $pslug;
-					$post->author = $pauthor;
+					$post->author_id = $pauthor;
+					$post->author = $am->GetAuthorNameForID($pauthor);
 					$post->text = $ptext;
 					$post->link = $plink;
 					$post->image = $pimage;
@@ -248,13 +302,15 @@ class PostManagement {
 				while ($stmt->fetch()) {
 					
 					$cm = new CategoryManagement();
+					$am = new AuthorManagement();
 					
 					$post = new post();
 					$post->id = $pid;
 					$post->type = $ptype;
 					$post->title = $ptitle;
 					$post->slug = $pslug;
-					$post->author = $pauthor;
+					$post->author_id = $pauthor;
+					$post->author = $am->GetAuthorNameForID($pauthor);
 					$post->text = $ptext;
 					$post->link = $plink;
 					$post->image = $pimage;
@@ -368,13 +424,15 @@ class PostManagement {
 				while ($stmt->fetch()) {
 					
 					$cm = new CategoryManagement();
+					$am = new AuthorManagement();
 					
 					$post = new post();
 					$post->id = $pid;
 					$post->type = $ptype;
 					$post->title = $ptitle;
 					$post->slug = $pslug;
-					$post->author = $pauthor;
+					$post->author_id = $pauthor;
+					$post->author = $am->GetAuthorNameForID($pauthor);
 					$post->text = $ptext;
 					$post->link = $plink;
 					$post->image = $pimage;

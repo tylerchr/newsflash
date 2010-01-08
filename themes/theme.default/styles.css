@@ -147,6 +147,30 @@ section.nf-post {
 	width: 100%;
 }
 
+.nf-post-condensed {
+	margin-top: -25px;	
+}
+
+.nf-post-condensed ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	margin-bottom: 20px;
+}
+
+.nf-post-condensed h1.nf-condensed-header {
+	font-size: 1.6em;
+	margin: 0;
+	padding: 0;
+	margin-bottom: 10px;
+}
+
+.nf-post-condensed h2 {
+	font-size: 1.2em;
+	display: inline;
+	font-weight: normal;
+}
+
 .nf-post {
 	font-family: 'Lucida Grande', Verdana, 'Bitstream Vera Sans', Arial, sans-serif;
 	font-size: 12px;
@@ -257,4 +281,28 @@ ul.tag-list li a {
 ul.tag-list li a:hover {
 	background-color: #2fa6e9;
 	color: white;	
+}
+
+#author-info {
+	clear: both;
+	overflow: hidden;
+	
+	padding-bottom: 30px;
+	border-bottom: 1px solid #eee;
+}
+
+#author-avatar {
+	padding: 1px;
+	border: 1px solid #ccc;	
+	
+	float: left;
+	margin-right: 20px;
+	
+	height: 128px;
+	width: 128px;
+}
+
+#author-meta {
+	float: left;
+	width: 500px;
 }

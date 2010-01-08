@@ -16,7 +16,12 @@ $classlist = array(	'Core',
 					'PageConfig',
 					'Category',
 					'CategoryManagement',
-					'TagManagement'
+					'TagManagement',
+					'PageVariables',
+					'Page',
+					'PageManagement',
+					'Author',
+					'AuthorManagement'
 				  );
 
 foreach ($classlist as $name) {

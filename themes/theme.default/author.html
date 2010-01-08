@@ -1,0 +1,13 @@
+<section class="nf-post nf-post-text">
+	<div id="author-info">
+		<img id="author-avatar" src="<?php echo $tags->nf_author_avatar; ?>" alt="" />
+		<div id="author-meta">
+			<h1>Posts by <a href="<?php echo $tags->nf_author_permalink; ?>"><?php echo $tags->nf_author_name; ?></a></h1>
+			<p><?php echo $tags->nf_author_bio; ?></p>
+			<span class="nf-post-meta">contact <a href="mailto:<?php echo $tags->nf_author_email; ?>"><?php echo $tags->nf_author_email; ?></a></span>
+		</div>
+	</div>
+</section>
+<section class="nf-post-condensed">
+	<?php echo $tags->nf_author_posts; ?>
+</section>
