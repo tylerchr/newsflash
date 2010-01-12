@@ -10,10 +10,16 @@ require('configuration.php');
 
 // Needs to include code for fancy URL rewriting someday
 
+/*
 $pc = new PageConfig('single');
 $pc->SinglePostID = intval($_GET['post']);
 
 $ui = new ui();
 echo $ui->buildPage($pc);
+*/
+
+$nf = new Newsflash();
+$page = new PostingPage(intval($_GET['post']));
+echo $nf->GetFinal($page);
 
 ?>

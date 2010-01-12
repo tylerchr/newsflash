@@ -1,0 +1,29 @@
+# On Refactoring the UI class #
+
+The class is an absolute **disaster**. Isn't clean code, needs to be refactored
+quite desperately. All pages get run through this single class's buildPage method,
+which is not exactly good practice at all. I believe the solution to this problem
+lies in inheritance. My intended solution follows:
+
+## Create a root Newsflash class ##
+
+This class will represent, quite literally, an instance of the Newsflash software.
+
+## Create a second Page class ##
+
+This class'd represent a page that might get displayed in the course of running the
+software. It'd be generic, and built primarily to be subclassed by:
+
+## Subclass Page for specific types of pages ##
+
+For example, there'd be a TagPage class that would be used to display a tag listing,
+and a CategoryPage for listing posts in a particular category. A full listing of
+Page subclasses:
+
+	- SearchPage (search results)
+	- TagPage (posts matching a particular tag)
+	- CategoryPage (posts in a certain category)
+	- ArchivePage (posts from a given time period)
+	- AuthorPage (posts by a particular author, plus some author info)
+	- PostPage (a single post -- might be further subclassed into TextPostPage, LinkPostPage, etc)
+	- PagePage (a literal page)

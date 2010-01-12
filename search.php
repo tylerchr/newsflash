@@ -8,11 +8,8 @@
 require('classes/classes.php');
 require('configuration.php');
 
-// Needs to include code for fancy URL rewriting someday
-
-$ui = new ui();
-$pc = new PageConfig('search');
-$pc->searchQuery = $_GET['q'];
-echo $ui->buildPage($pc);
+$nf = new Newsflash();
+$page = new SearchPage($_GET['q']);
+echo $nf->GetFinal($page);
 
 ?>

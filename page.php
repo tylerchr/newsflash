@@ -10,10 +10,8 @@ require('configuration.php');
 
 // Needs to include code for fancy URL rewriting someday
 
-$pc = new PageConfig('page');
-$pc->SinglePageID = intval($_GET['page']);
-
-$ui = new ui();
-echo $ui->buildPage($pc);
+$nf = new Newsflash();
+$page = new LiteralPage(intval($_GET['page']));
+echo $nf->GetFinal($page);
 
 ?>

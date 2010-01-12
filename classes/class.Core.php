@@ -16,7 +16,7 @@ class Core {
 		require(dirname(__FILE__) . '/../configuration.php');
 		return $time - ($nf['blog']['timezone'] * 3600);	
 	}
-		
+	
 }
 
 ?>

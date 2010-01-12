@@ -10,9 +10,15 @@ require('configuration.php');
 
 // Needs to include code for fancy URL rewriting someday
 
+/*
 $ui = new ui();
 $pc = new PageConfig('tag');
 $pc->listTag = $_GET['tag'];
 echo $ui->buildPage($pc);
+*/
+
+$nf = new Newsflash();
+$page = new TagPage($_GET['tag']);
+echo $nf->GetFinal($page);
 
 ?>
