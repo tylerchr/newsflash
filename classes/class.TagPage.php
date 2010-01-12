@@ -31,8 +31,21 @@ class TagPage extends Page {
 		
 		$pm = new PostManagement();
 		$posts = $pm->GetPostsTaggedWith($this->GetTag());
-		$PageConfig->variables->nf_page_title = 'Tagged with \'' . $PageConfig->listTag . '\' - ' . $nf['blog']['title'];
-		$PageConfig->variables->nf_posts = $this->FormatPostListing($posts, $PageConfig);
+		$PageConfig->variables->nf_page_title = 'Tagged with \'' . $this->GetTag() . '\' - ' . $nf['blog']['title'];
+		
+		// render the page
+		if ($PageConfig->PostListStyle == 'condensed') {
+			$PageConfig->variables->nf_posts = $this->FormatCondensedPosts($posts, $PageConfig);
+		} else {
+			if (count($posts) > 0) {
+				foreach ($posts as $single_post) {
+					$PageConfig->variables->nf_posts .= $this->FormatPost($single_post, $PageConfig);
+				}
+			} else {
+				require(dirname(__FILE__) . '/../configuration.php');
+				$PageConfig->variables->nf_posts = $nf['error']['no_posts'];	
+			}
+		}
 		
 		return $PageConfig;
 	}

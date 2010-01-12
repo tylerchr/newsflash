@@ -32,7 +32,21 @@ class SearchPage extends Page {
 		$pm = new PostManagement();
 		$posts = $pm->GetPostsMatchingQuery($this->GetQuery());
 		$PageConfig->variables->nf_page_title = 'Results for \'' . $PageConfig->searchQuery . '\' - ' . $nf['blog']['title'];
-		$PageConfig->variables->nf_posts = $this->FormatPostListing($posts, $PageConfig);
+		
+		// render the page
+		if ($PageConfig->PostListStyle == 'condensed') {
+			$PageConfig->variables->nf_posts = $this->FormatCondensedPosts($posts, $PageConfig);
+		} else {
+			if (count($posts) > 0) {
+				foreach ($posts as $single_post) {
+					$PageConfig->variables->nf_posts .= $this->FormatPost($single_post, $PageConfig);
+				}
+			} else {
+				require(dirname(__FILE__) . '/../configuration.php');
+				$PageConfig->variables->nf_posts = $nf['error']['no_posts'];	
+			}
+		}
+		// $PageConfig->variables->nf_posts = $this->FormatPostListing($posts, $PageConfig);
 		
 		return $PageConfig;
 	}

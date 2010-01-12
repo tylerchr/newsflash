@@ -29,15 +29,20 @@ class Page {
 	public function SetGenericTags($PageConfig) {
 		require(dirname(__FILE__) . '/../configuration.php');
 		
-		$PageConfig->variables->nf_blog_title = $nf['blog']['title'];
-		$PageConfig->variables->nf_blog_subtitle = $nf['blog']['subtitle'];
-		$PageConfig->variables->nf_site_root = '../../';
-		$PageConfig->variables->nf_category_list = $this->GetCategoryList();
-		$PageConfig->variables->nf_tag_list = $this->GetTagList();
-		$PageConfig->variables->nf_archive_list = $this->GetArchivesList();
-		$PageConfig->variables->nf_pages_list = $this->GetPageList();
-		$PageConfig->variables->nf_pages_list = $this->GetPageList();
-		$PageConfig->variables->nf_search_bar = $this->GetSearchBar();
+		$PageConfig->variables->nf_blog_title =		$nf['blog']['title'];
+		$PageConfig->variables->nf_blog_subtitle =	$nf['blog']['subtitle'];
+		$PageConfig->variables->nf_site_root =		'../../';
+		$PageConfig->variables->nf_category_list =	$this->GetCategoryList();
+		$PageConfig->variables->nf_tag_list =		$this->GetTagList();
+		$PageConfig->variables->nf_archive_list =	$this->GetArchivesList();
+		$PageConfig->variables->nf_pages_list =		$this->GetPageList();
+		$PageConfig->variables->nf_pages_list =		$this->GetPageList();
+		$PageConfig->variables->nf_search_bar =		$this->GetSearchBar();
+		
+		$PageConfig->variables->nf_siteroot =		$nf['paths']['siteroot'];
+		
+		if (method_exists($post, 'TagCloud'))
+			$tags->nf_post_tags =		$post->TagCloud();
 		
 		return $PageConfig;		
 	}
@@ -67,6 +72,72 @@ class Page {
 		ob_end_clean();
 		
 		return $page;	
+	}
+	
+	public function FormatPost($post, $PageConfig) {
+		
+		$core = new Core();
+		
+		// Assign post-related tags
+		$PageConfig->variables->nf_post_id =		$post->id;
+		$PageConfig->variables->nf_post_type =		$post->type;
+		$PageConfig->variables->nf_post_title =		$post->title;
+		$PageConfig->variables->nf_post_author =	'<a href="author.php?author=' . $post->author_id . '">' . $post->author . '</a>';
+		$PageConfig->variables->nf_post_date =		date("j F Y", $core->TimeFromUniversal($post->date));
+		$PageConfig->variables->nf_post_time =		date("g:i A", $core->TimeFromUniversal($post->date));
+		$PageConfig->variables->nf_post_text =		$this->FormatMarkdown($post->text);
+		$PageConfig->variables->nf_link_link =		$post->link;
+		$PageConfig->variables->nf_image_image =	$post->image;
+		$PageConfig->variables->nf_post_category =	'<a href="category.php?cid=' . $post->category_id . '">' . $post->category . '</a>';
+		$PageConfig->variables->nf_post_permalink =	$nf['paths']['siteroot'] . 'post.php?post=' . $post->id;
+		
+		$post_html = $this->OpenTemplate('post_' . $post->type, $PageConfig);
+		
+		return $post_html;
+	}
+	
+	public function FormatCondensedPosts($posts, $PageConfig) {
+		if (count($posts) > 0) {
+			
+			$current_month = NULL;
+			foreach ($posts as $single_post) {
+				$month = date("F Y", $single_post->date);
+				if ($month != $current_month) {
+					$current_month = $month;
+					$post_all .= '</ul><h1 class="nf-condensed-header">' . $month . '</h1><ul>';	
+				}
+				
+				$post_all .=	'<li>' .
+								'	<span class="nf-post-subhead nf-post-subhead-date">' . date("j M", $single_post->date) . '</span>' .
+								'	<h2><a href="post.php?post=' . $single_post->id . '">' . $single_post->title . '</a></h2>' .
+								'</li>';
+								
+			}
+			return $post_all;
+				
+		} else {
+			require(dirname(__FILE__) . '/../configuration.php');
+			return $nf['error']['no_posts'];	
+		}
+	}
+	
+	public function FormatMarkdown($input) {
+		require(dirname(__FILE__) . '/../configuration.php');
+		
+		// Markdown-format the text if Markdown is available, otherwise return the input text
+		$pf = new PackageFinder();
+		if ($pf->PackageEnabled('markdown') && !function_exists('Markdown')) {
+			$markdown_path = $nf['paths']['absolute'] . 'packages/pkg.markdown/markdown.php';
+			require($markdown_path);
+		}
+		
+		if (function_exists('Markdown')) {
+			$post_text = Markdown($input);
+		} else {
+			$post_text = $input;
+		}
+		
+		return $post_text;
 	}
 	
 	//
@@ -147,162 +218,6 @@ class Page {
 		</form>';
 		
 		return $bar;	
-	}
-	
-	public function ReadTemplateFile($file) {
-		$path = $this->theme_path . $file;
-		if (file_exists($path)) {
-			$contents = file_get_contents($path);
-		}
-		return $contents;
-	}
-	
-	//
-	// BAD CODE
-	//
-	
-	
-	public function FormatPostListing($posts, $PageConfig) {
-		if (count($posts) > 0) {
-			
-			if ($PageConfig->PostListStyle == 'condensed') {
-				$current_month = NULL;
-				foreach ($posts as $single_post) {
-					$month = date("F Y", $single_post->date);
-					if ($month != $current_month) {
-						$current_month = $month;
-						$post_all .= '</ul><h1 class="nf-condensed-header">' . $month . '</h1><ul>';	
-					}
-					
-					$post_all .=	'<li>' .
-									'	<span class="nf-post-subhead nf-post-subhead-date">' . date("j M", $single_post->date) . '</span>' .
-									'	<h2><a href="post.php?post=' . $single_post->id . '">' . $single_post->title . '</a></h2>' .
-									'</li>';
-				}
-				return $post_all;
-			} else {
-				foreach ($posts as $single_post) {
-					$post_all .= $this->FormatPost($single_post, $PageConfig);
-				}
-				return $post_all;
-			}
-		} else {
-			require(dirname(__FILE__) . '/../configuration.php');
-			return $nf['error']['no_posts'];	
-		}
-	}
-	
-	public function FormatPost($post, $PageConfig) {
-		require(dirname(__FILE__) . '/../configuration.php');
-		
-		// Markdown-format the text, if Markdown is available
-		$pf = new PackageFinder();
-		if ($pf->PackageEnabled('markdown') && !function_exists('Markdown')) {
-			$markdown_path = $nf['paths']['absolute'] . 'packages/pkg.markdown/markdown.php';
-			require($markdown_path);
-		}
-		
-		if (function_exists('Markdown')) {
-			$post_text = Markdown($post->text);
-		} else {
-			echo "<li>Help (" . $post->title . ")</li>";
-			$post_text = $post->text;
-		}
-		
-		
-		$core = new Core();
-		$tags = $PageConfig->variables;
-		$tags->nf_siteroot =		$nf['paths']['siteroot'];
-		
-		if (method_exists($post, 'TagCloud'))
-			$tags->nf_post_tags =		$post->TagCloud();
-		
-		$pm = new PostManagement();
-		
-		if ($PageConfig->type == 'page') {
-			
-			// Assign page-related tags
-			$tags->nf_page_id =			$post->id;
-			$tags->nf_page_title =		$post->title;
-			$tags->nf_page_date =		date("j F Y", $core->TimeFromUniversal($post->date));
-			$tags->nf_page_text =		$post_text;
-			$tags->nf_page_permalink =	$nf['paths']['siteroot'] . 'page.php?page=' . $post->id;
-			
-			$post_html = $this->OpenTemplate('page', $PageConfig);		
-		} else if ($PageConfig->type == 'author') {
-			
-			if ($pf->PackageEnabled('Gravatar') && !class_exists('Gravatar')) {
-				$gravatar_path = $nf['paths']['absolute'] . 'packages/pkg.Gravatar/Gravatar.php';
-				require($gravatar_path);
-			}
-			
-			// Get Gravatar	
-			$grv = new Gravatar($post->email);
-			if ($grv->GravatarExists()) {
-				$grv->setSize(128);
-				$gravatar = $grv;	
-			} else {
-				if (rand(0,1) == 0) {
-					$gravatar = 'themes/theme.default/images/default-avatar-female.png';	
-				} else {
-					$gravatar = 'themes/theme.default/images/default-avatar-male.png';
-				}
-			}
-			
-			// Markdownify their bio
-			if ($pf->PackageEnabled('markdown') && !function_exists('Markdown')) {
-				$markdown_path = $nf['paths']['absolute'] . 'packages/pkg.markdown/markdown.php';
-				require($markdown_path);
-			}
-			$bio = Markdown($post->bio);
-			
-			// Assign author-related tags
-			$tags->nf_author_name =		$post->first_name . ' ' . $post->last_name;
-			$tags->nf_author_permalink =	$nf['paths']['siteroot'] . 'author.php?author=' . $post->id;
-			$tags->nf_author_email =	$post->email;
-			$tags->nf_author_bio =		$bio;
-			$tags->nf_author_homepage =	$post->homepage;
-			$tags->nf_author_avatar =	$gravatar;
-			
-			$PageConfig2 = $PageConfig;
-			$PageConfig2->type = 'all';
-			$PageConfig2->PostListStyle = 'condensed';
-			$tags->nf_author_posts =	$this->FormatPostListing($pm->GetPostsByAuthor($post->id), $PageConfig2);
-			
-			$post_html = $this->OpenTemplate('author', $PageConfig);
-		} else {
-			
-			// Assign post-related tags
-			$tags->nf_post_id =			$post->id;
-			$tags->nf_post_type =		$post->type;
-			$tags->nf_post_title =		$post->title;
-			$tags->nf_post_author =		'<a href="author.php?author=' . $post->author_id . '">' . $post->author . '</a>';
-			$tags->nf_post_date =		date("j F Y", $core->TimeFromUniversal($post->date));
-			$tags->nf_post_time =		date("g:i A", $core->TimeFromUniversal($post->date));
-			$tags->nf_post_text =		$post_text;
-			$tags->nf_link_link =		$post->link;
-			$tags->nf_image_image =		$post->image;
-			$tags->nf_post_category =	'<a href="category.php?cid=' . $post->category_id . '">' . $post->category . '</a>';
-			$tags->nf_post_permalink =	$nf['paths']['siteroot'] . 'post.php?post=' . $post->id;
-			
-			$post_html = $this->OpenTemplate('post_' . $post->type, $PageConfig);
-		}
-		return $post_html;
-	}
-	
-	public function AbsolutifyPathnames($abs, $content) {
-		
-		// Should only insert absolute path IF:
-		//     1. It is within a tag
-		//     2. It is not already an absolute, beginning in a prefix://
-		
-		// But we're lazy and for now will check neither
-		$content = str_ireplace('src="', 'src="' . $abs, $content);
-		$content = str_ireplace('src=\'', 'src="' . $abs, $content);
-		$content = str_ireplace('href="', 'href="' . $abs, $content);
-		$content = str_ireplace('href=\'', 'href="' . $abs, $content);
-		
-		return $content;	
 	}
 		
 }

@@ -32,7 +32,7 @@ class PostingPage extends Page {
 		$pm = new PostManagement();
 		$posts = $pm->GetCertainPost($this->GetPostID());
 		$PageConfig->variables->nf_page_title = $posts[0]->title . ' - ' . $nf['blog']['title'];
-		$PageConfig->variables->nf_posts = $this->FormatPostListing($posts, $PageConfig);
+		$PageConfig->variables->nf_posts = $this->FormatPost($posts[0], $PageConfig);
 		
 		return $PageConfig;
 	}

@@ -61,14 +61,44 @@ class ArchivePage extends Page {
 		return $this->day;	
 	}
 	
+	public function TimePeriodString() {
+		
+		if (!is_null($this->GetYear())) {
+			$string = $this->GetYear();
+		}
+		
+		if (!is_null($this->GetYear()) && !is_null($this->GetMonth())) {
+			$string = date( 'F', mktime(1, 0, 0, $this->GetMonth())) . ' ' . $this->GetYear();
+		}
+		
+		if (!is_null($this->GetYear()) && !is_null($this->GetMonth()) && !is_null($this->GetDay())) {
+			$string = $this->GetDay() . ' ' . date( 'F', mktime(1, 0, 0, $this->GetMonth())) . ' ' . $this->GetYear();
+		}
+		
+		return $string;	
+	}
+	
 	public function ConstructContents() {
 		require(dirname(__FILE__) . '/../configuration.php');
 		require($nf['paths']['absolute'] . 'packages/packages.php');
 		
 		$pm = new PostManagement();
 		$posts = $pm->GetPostsFrom($this->GetYear(), $this->GetMonth(), $this->GetDay());
-		$PageConfig->variables->nf_page_title = 'Archives';
-		$PageConfig->variables->nf_posts = $this->FormatPostListing($posts, $PageConfig);
+		$PageConfig->variables->nf_page_title = 'Archives for ' . $this->TimePeriodString();
+		
+		// render the page
+		if ($PageConfig->PostListStyle == 'condensed') {
+			$PageConfig->variables->nf_posts = $this->FormatCondensedPosts($posts, $PageConfig);
+		} else {
+			if (count($posts) > 0) {
+				foreach ($posts as $single_post) {
+					$PageConfig->variables->nf_posts .= $this->FormatPost($single_post, $PageConfig);
+				}
+			} else {
+				require(dirname(__FILE__) . '/../configuration.php');
+				$PageConfig->variables->nf_posts = $nf['error']['no_posts'];	
+			}
+		}
 		
 		return $PageConfig;
 	}
