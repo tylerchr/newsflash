@@ -1,7 +1,8 @@
 # Newsflash To-Do #
 
-- Refactoring -- this is getting messy
-- Write better documentation
+- Facebook / Twitter integration
+- Comments (gravatar)
+- Write better documentation (wiki project?)
 
 # Longer-term Features #
 
@@ -10,13 +11,11 @@
 - Plugins and extensibility
 - Security
 - Installer
-- Facebook / Twitter integration
-- Comments (gravatar)
 
 # Considerations #
 
 - Automatic updating, a la WordPress
 - User-friendly but powerful theme generator
-- Refactor the tag-replacement system
+- Clean up the tag-replacement system
 - Media manager
 - Clean URLs
