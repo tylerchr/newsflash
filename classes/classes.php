@@ -30,12 +30,22 @@ $classlist = array(	'Newsflash',
 					'Page',
 					'PageManagement',
 					'Author',
-					'AuthorManagement'
+					'AuthorManagement',
+					'admin/AdminPage'
 				  );
 
 foreach ($classlist as $name) {
+	
+	$thing = explode('/', $name);
+	if (count($thing) > 1) {
+		$path = $thing[0] . '/';
+		$name = $thing[1];	
+	} else {
+		$path = '';	
+	}
+	
 	if (!class_exists($name)) {
-		require('class.' . $name . '.php');
+		require($path . 'class.' . $name . '.php');
 	}
 }
 

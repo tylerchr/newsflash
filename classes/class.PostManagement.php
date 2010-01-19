@@ -12,20 +12,107 @@ class PostManagement {
 		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
 		
-		if ($stmt = $sql->mysqli->prepare('INSERT INTO ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' (post_type, post_title, post_slug, post_author, post_text, post_date, post_category, post_tags) VALUES (?, ?, ?, ?, ?, ?)')) {
+		if ($stmt = $sql->mysqli->prepare('INSERT INTO ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' (post_type, post_title, post_slug, post_author, post_text, post_date, post_category, post_tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')) {
 			
 			$stmt->bind_param("sssssiss", $post->type, $post->title, $post->slug, $post->author, $post->text, $post->date, $post->category, $post->tags);
 			if ($stmt->execute()) {
 				return true;
 			} else {
-				echo $sql->error();	
+				echo 'Execution error: ' . $sql->error();	
 			}
 		
 		} else {
-			echo $sql->mysqli->error;	
+			echo 'Preparation error: ' . $sql->mysqli->error;	
 		}
 		
 		return false;
+	}
+	
+	public function UpdatePost($post) {
+		
+		require(dirname(__FILE__) . '/../configuration.php');
+		$sql = new mysql();
+		
+		if ($stmt = $sql->mysqli->prepare('UPDATE ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' SET post_type=?, post_title=?, post_slug=?, post_author=?, post_text=?, post_date=?, post_category=?, post_tags=? WHERE post_id=?')) {
+			
+			$stmt->bind_param("sssssissi", $post->type, $post->title, $post->slug, $post->author, $post->text, $post->date, $post->category, $post->tags, $post->id);
+			if ($stmt->execute()) {
+				return true;
+			} else {
+				echo 'Execution error: ' . $sql->error();	
+			}
+		
+		} else {
+			echo 'Preparation error: ' . $sql->mysqli->error;	
+		}
+		
+		return false;
+	}
+	
+	public function SavePostData($post) {
+		if ($this->DoesPostExist($post->id)) {
+			// post with ID exists, so we'll update it
+			return $this->UpdatePost($post);
+		} else {
+			// error, no ID given and can't update with no ID -- creating new post instead!
+			return $this->SavePost($post);
+		}		
+	}
+	
+	public function DoesPostExist($post_id) {
+		
+		require(dirname(__FILE__) . '/../configuration.php');
+		$sql = new mysql();
+		
+		if ($stmt = $sql->mysqli->prepare('SELECT post_id FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' WHERE post_id = ?')) {
+			
+			$stmt->bind_param("i", $post_id);
+			if ($stmt->execute()) {
+				$stmt->store_result();
+				$row_ct = $stmt->num_rows;
+				$stmt->close();
+				
+				if ($row_ct > 0) {
+					return true;
+				} else {
+					return false;	
+				}
+			} else {
+				echo 'Execution error: ' . $sql->error();	
+			}
+		
+		} else {
+			echo 'Preparation error: ' . $sql->mysqli->error;	
+		}
+		
+		return false;
+	}
+	
+	public function DeletePost($post_id) {
+		$pid = intval($post_id);
+		if ($this->DoesPostExist($pid)) {
+
+			require(dirname(__FILE__) . '/../configuration.php');
+			$sql = new mysql();
+			
+			if ($stmt = $sql->mysqli->prepare('DELETE FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' WHERE post_id=?')) {
+				
+				$stmt->bind_param("i", $pid);
+				if ($stmt->execute()) {
+					return true;
+				} else {
+					echo $sql->error();	
+				}
+			
+			} else {
+				echo $sql->mysqli->error;	
+			}
+			
+			return false;
+
+		} else {
+			// continue	
+		}	
 	}
 	
 	public function GetPosts($id=-1) {
@@ -200,14 +287,14 @@ class PostManagement {
 		return false;
 	}
 	
-	public function GetCertainPost($pid) {
+	public function GetCertainPost($post_id) {
 		
 		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
 		
 		if ($stmt = $sql->mysqli->prepare('SELECT post_id, post_type, post_title, post_slug, post_author, post_text, post_link, post_image, post_date, post_category, post_tags FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' WHERE post_id = ?')) {
 			
-			$stmt->bind_param("i", $pid);
+			$stmt->bind_param("i", $post_id);
 			$stmt->bind_result($pid, $ptype, $ptitle, $pslug, $pauthor, $ptext, $plink, $pimage, $pdate, $pcategory, $ptags);
 			if ($stmt->execute()) {
 					$stmt->fetch();
@@ -453,6 +540,12 @@ class PostManagement {
 		
 		return false;
 		
+	}
+	
+	public function GenerateSlug($input) {
+		$output = str_replace(" ", '-', $input);
+		$output = strtolower(preg_replace("/[^a-zA-Z0-9-\s]/", "", $output));
+		return $output;
 	}
 		
 }
