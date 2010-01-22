@@ -208,6 +208,12 @@ section.nf-post {
 	max-width: 680px;
 }
 
+.nf-post blockquote {
+	padding-left: 20px;
+	margin-left: 20px;
+	border-left: 1px solid #ccc;
+}
+
 .nf-post-image img {
 	border: 5px solid black;
 }

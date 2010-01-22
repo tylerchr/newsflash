@@ -31,17 +31,18 @@ class AuthorManagement {
 		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
 		
-		$query = 'SELECT author_id, author_first_name, author_last_name, author_pwhash, author_email, author_bio, author_homepage, author_created_date FROM ' . $nf['database']['table_prefix'] . $nf['database']['author_table'] . ' WHERE ' . $where;
+		$query = 'SELECT author_id, author_first_name, author_last_name, author_username, author_pwhash, author_email, author_bio, author_homepage, author_created_date FROM ' . $nf['database']['table_prefix'] . $nf['database']['author_table'] . ' WHERE ' . $where;
 		if ($stmt = $sql->mysqli->prepare($query)) {
 			
 			$stmt->bind_param($type, $param);
-			$stmt->bind_result($aid, $afirstname, $alastname, $apasswordhash, $aemail, $abio, $ahomepage, $acreateddate);
+			$stmt->bind_result($aid, $afirstname, $alastname, $username, $apasswordhash, $aemail, $abio, $ahomepage, $acreateddate);
 			if ($stmt->execute()) {
 				while ($stmt->fetch()) {
 					$author = new Author();
 					$author->id = $aid;
 					$author->first_name = $afirstname;
 					$author->last_name = $alastname;
+					$author->username = $username;
 					$author->password_hash = $apasswordhash;
 					$author->email = $aemail;
 					$author->bio = $abio;
@@ -81,6 +82,19 @@ class AuthorManagement {
 		}
 		
 		return false;
+	}
+	
+	public function ValidateAuthorCredentials($username, $pw_hash) {
+		$authors = $this->GetAuthorsWithClause("author_username = ?", "s", $username);
+		if (count($authors) == 1) {
+			if ($authors[0]->password_hash == $pw_hash) {
+				return $authors[0];	
+			} else {
+				return false;	
+			}
+		} else {
+			return false;	
+		}
 	}
 	
 	public function GetAuthorNameForID($aid) {

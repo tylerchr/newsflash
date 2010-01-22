@@ -10,6 +10,7 @@ class Author {
 	public $id;
 	public $first_name;
 	public $last_name;
+	public $username;
 	public $password_hash;
 	public $email;
 	public $bio;
@@ -23,6 +24,7 @@ class Author {
 		$this->id =				-1;	
 		$this->first_name =		NULL;
 		$this->last_name =		NULL;
+		$this->username =		NULL;
 		$this->password_hash =	NULL;
 		$this->email =			NULL;
 		$this->bio =			NULL;

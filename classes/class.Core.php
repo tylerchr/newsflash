@@ -17,6 +17,10 @@ class Core {
 		return $time - ($nf['blog']['timezone'] * 3600);	
 	}
 	
+	public function CreatePasswordHash($password) {
+		return md5($password);	
+	}
+	
 }
 
 ?>

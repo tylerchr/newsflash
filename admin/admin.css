@@ -4,7 +4,6 @@ body {
 	
 	font-family: "Lucida Grande",Verdana,"Bitstream Vera Sans",Arial,sans-serif;
 	font-size: 12px;
-
 }
 
 .container {
@@ -353,9 +352,11 @@ ul.link-button-bar li a:active {
 form#new-post-form #post-title-view {
 	display: block;
 	margin: 0;
+	padding: 0;
+	
+	margin-top: 10px;
 	margin-left: 40px;
 	margin-right: 40px;
-	margin-top: 10px;
 }
 
 form#new-post-form #post-title-view .click-edit-text {
@@ -363,6 +364,9 @@ form#new-post-form #post-title-view .click-edit-text {
 	font-weight: normal;
 	margin-left: 100px;
 	display: inline;
+	
+	padding: 0;
+	margin: 0;
 }
 
 form#new-post-form #post-title-view:hover .click-edit-text {
@@ -370,17 +374,38 @@ form#new-post-form #post-title-view:hover .click-edit-text {
 }
 
 form#new-post-form #post-title-view h2 {
-	padding: 11px;	
+	padding: 0px;
+	margin: 0;
+	height: 36px;
+	line-height: 36px;
+	vertical-align: middle;
+	
+	width: 600px;
+	
+	font-size: 18px;
 }
 
 form#new-post-form #post-title-view h2:hover {
 	background-color: #FFF8E0;
 }
+
+form#new-post-form #post-title {
+	display: block;
+	margin: 0;
+	padding: 0;	
+	
+	margin-top: 10px;
+	margin-left: 40px;
+	margin-right: 40px;
+}
  
 form#new-post-form #post-title input {
 	margin: 0;
-	margin-left: 40px;
-	margin-top: 20px;
+	padding: 0;
+	height: 36px;
+	width: 600px;
+	
+	font-size: 14px;
 }
  
 #new-post-type {

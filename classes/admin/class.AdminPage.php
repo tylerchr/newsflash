@@ -28,7 +28,7 @@ $stuff = '<html>
 					<li><a href="administration.php?themes">Themes</a></li>
 					<li><a href="administration.php?authors">Authors</a></li>
 					
-					<li class="menu-right"><a href="#">Log Out</a></li>
+					<li class="menu-right"><a href="administration.php?logout">Log Out</a></li>
 					<li class="menu-right"><a href="#">Settings</a></li>
 					<li class="menu-right"><a href="#">View Site</a></li>
 				</ul>
@@ -77,7 +77,7 @@ $stuff = '<html>
 						<li><a href="#" class="visible-button">Write a new post</a></li>
 						<li><a href="#" class="visible-button">Add an author</a></li>
 						<li><a href="#" class="visible-button">Strike it rich</a></li>
-						<li><a href="#" class="visible-button">Log out</a></li>
+						<li><a href="administration.php?logout" class="visible-button">Log out</a></li>
 					</ul>
 				</div>
 				<div class="home-thumb">
