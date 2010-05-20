@@ -9,8 +9,8 @@ class AuthorPage extends Page {
 	
 	private $authorID;
 	
-	public function __construct($authorid) {
-		$this->SetAuthorID($authorid);
+	public function SetPageVariables($vars) {
+		$this->SetAuthorID($vars['identifier']);
 	}
 	
 	public function SetAuthorID($authorid) {
@@ -31,6 +31,7 @@ class AuthorPage extends Page {
 		
 		$am = new AuthorManagement();
 		$posts = $am->GetCertainAuthor($this->GetAuthorID());
+		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
 		$PageConfig->variables->nf_page_title = 'Posts by ' . $posts[0]->first_name . ' ' . $posts[0]->last_name . ' - ' . $nf['blog']['title'];
 		$PageConfig->type = 'author';
 		
@@ -84,7 +85,8 @@ class AuthorPage extends Page {
 		$PageConfig->variables->nf_author_avatar =		$gravatar;
 		
 		// Get and format list of author's posts
-		$postsByAuthor = $pm->GetPostsByAuthor($post->id); // get posts by given author id
+		$post_data = $pm->GetPostsByAuthor($post->id); // get posts by given author id
+		$postsByAuthor = $post_data['posts'];
 		$PageConfig->variables->nf_author_posts = $this->FormatCondensedPosts($postsByAuthor, $PageConfig);
 		
 		$post_html = $this->OpenTemplate('author', $PageConfig);

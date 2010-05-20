@@ -11,6 +11,11 @@ class ArchivePage extends Page {
 	private $month;
 	private $day;
 	
+	public function SetPageVariables($vars) {
+		echo "Setting identifier";
+		$this->SetCategoryID($vars['id']);
+	}
+	
 	public function __construct($year=-1, $month=-1, $day=-1) {
 		if ($year > 0) {
 			$this->SetYear($year);

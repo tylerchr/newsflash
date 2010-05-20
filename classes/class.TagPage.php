@@ -9,8 +9,8 @@ class TagPage extends Page {
 	
 	private $tag;
 	
-	public function __construct($tag) {
-		$this->SetTag($tag);
+	public function SetPageVariables($vars) {
+		$this->SetTag($vars['identifier']);
 	}
 	
 	public function SetTag($tag) {
@@ -30,7 +30,9 @@ class TagPage extends Page {
 		require($nf['paths']['absolute'] . 'packages/packages.php');
 		
 		$pm = new PostManagement();
-		$posts = $pm->GetPostsTaggedWith($this->GetTag());
+		$post_data = $pm->GetPostsTaggedWith($this->GetTag(), $this->getPageData());
+		$posts = $post_data['posts'];
+		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
 		$PageConfig->variables->nf_page_title = 'Tagged with \'' . $this->GetTag() . '\' - ' . $nf['blog']['title'];
 		
 		// render the page

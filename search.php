@@ -9,7 +9,7 @@ require('classes/classes.php');
 require('configuration.php');
 
 $nf = new Newsflash();
-$page = new SearchPage($_GET['q']);
+$page = new SearchPage();
 echo $nf->GetFinal($page);
 
 ?>

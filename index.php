@@ -9,7 +9,10 @@ require('classes/classes.php');
 require('configuration.php');
 
 $nf = new Newsflash();
-$page = new ListPage();
+$options = array(
+	"page" => $_GET['p']
+);
+$page = new ListPage($options);
 
 echo $nf->GetFinal($page);
 

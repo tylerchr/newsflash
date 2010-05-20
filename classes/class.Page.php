@@ -8,11 +8,61 @@
 class Page {
 	
 	private $theme;
+	private $page;
+	
+	public function __construct() {
+		
+		$vars = $this->_ReadPageVariables();
+		
+		$this->SetPageVariables($vars);
+		$this->SetPageData(array("page" => $vars['page']));
+	}
+	
+	private function _ReadPageVariables() {
+		
+		$replacements = array(
+			"p" => "page",
+			"q" => "query",
+			"tag" => "identifier",
+			"cid" => "identifier",
+			"author" => "identifier",
+			"post" => "identifier",
+			"page" => "identifier"
+		);
+		
+		$variables['page'] = 1;
+		foreach ($_GET as $key => $value) {
+			if (array_key_exists($key, $replacements)) {
+				$key = $replacements[$key];	
+			}
+			$variables[$key] = $value;	
+		}
+		return $variables;
+	}
+	
+	public function SetPageVariables($id) {
+		// do nothing with it, in this generic prototype
+	}
+	
+	public function setPageData($page) {
+		require(dirname(__FILE__) . '/../configuration.php');
+		$page['limit'] = $nf['posts']['posts_per_page'];
+		$page['total_pages'] = ceil($page['results'] / $page['limit']);
+		$this->page = $page;
+	}
+	
+	public function getPageData() {
+		return $this->page;	
+	}
 	
 	public function Render($Page) {
 		$this->SetTheme('theme.default');
 		
 		$PageConfig = $Page->ConstructContents();
+		
+		// here would be the place to append a pagination control
+		$PageConfig->variables->nf_posts .= $this->PaginationControl();
+		
 		$PageConfig = $this->SetGenericTags($PageConfig);
 
 		// Check if theme exists, before continuing
@@ -24,6 +74,25 @@ class Page {
 		$mainpage = $this->OpenTemplate('main', $PageConfig);
 		
 		return $mainpage;
+	}
+	
+	public function PaginationControl() {
+		$pageData = $this->getPageData();
+		$current_page = $pageData['page'];
+		$total_pages = $pageData['total_pages'];
+		
+		$control = "<nav id=\"nf-pagination\"><ul id=\"nf-pagination-control\"><li><p>Page</p></li>";
+		for ($i=1; $i<=$total_pages; $i++) {
+			if ($i == $current_page) {
+				$class = " class=\"nf-current-page\"";	
+			} else {
+				$class = "";	
+			}
+			
+			$control .= "<li><a href=\"?p=" . $i . "\"" . $class . ">" . $i . "</a></li>";
+		}
+		$control .= "</ul></nav>";
+		return $control;	
 	}
 	
 	public function SetGenericTags($PageConfig) {
@@ -74,18 +143,18 @@ class Page {
 		return $page;	
 	}
 	
-	public function FormatPost($post, $PageConfig) {
+	public function FormatPost($post, $PageConfig, $highlight=array()) {
 		
 		$core = new Core();
 		
 		// Assign post-related tags
 		$PageConfig->variables->nf_post_id =		$post->id;
 		$PageConfig->variables->nf_post_type =		$post->type;
-		$PageConfig->variables->nf_post_title =		$post->title;
+		$PageConfig->variables->nf_post_title =		$this->_HighlightText($highlight, $post->title);
 		$PageConfig->variables->nf_post_author =	'<a href="author.php?author=' . $post->author_id . '">' . $post->author . '</a>';
 		$PageConfig->variables->nf_post_date =		date("j F Y", $core->TimeFromUniversal($post->date));
 		$PageConfig->variables->nf_post_time =		date("g:i A", $core->TimeFromUniversal($post->date));
-		$PageConfig->variables->nf_post_text =		$this->FormatMarkdown($post->text);
+		$PageConfig->variables->nf_post_text =		$this->_HighlightText($highlight, $this->FormatMarkdown($post->text));
 		$PageConfig->variables->nf_link_link =		$post->link;
 		$PageConfig->variables->nf_image_image =	$post->image;
 		$PageConfig->variables->nf_post_category =	'<a href="category.php?cid=' . $post->category_id . '">' . $post->category . '</a>';
@@ -94,6 +163,13 @@ class Page {
 		$post_html = $this->OpenTemplate('post_' . $post->type, $PageConfig);
 		
 		return $post_html;
+	}
+	
+	private function _HighlightText($keys, $text) {
+		foreach ($keys as $key) {
+			$text = str_ireplace($key, "<span class=\"nf-search-highlight\">" . $key . "</span>", $text);
+		}
+		return $text;
 	}
 	
 	public function FormatCondensedPosts($posts, $PageConfig) {

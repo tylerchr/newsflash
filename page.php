@@ -11,7 +11,7 @@ require('configuration.php');
 // Needs to include code for fancy URL rewriting someday
 
 $nf = new Newsflash();
-$page = new LiteralPage(intval($_GET['page']));
+$page = new LiteralPage();
 echo $nf->GetFinal($page);
 
 ?>

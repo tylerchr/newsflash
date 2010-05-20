@@ -14,7 +14,10 @@ class ListPage extends Page {
 		require($nf['paths']['absolute'] . 'packages/packages.php');
 		
 		$pm = new PostManagement();
-		$posts = $pm->GetPosts();
+		$pageNumber = $this->getPageData();
+		$post_data = $pm->GetPosts(null, $this->getPageData());
+		$posts = $post_data['posts'];
+		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
 		$PageConfig->variables->nf_page_title = $nf['blog']['title'];
 		
 		// render the page

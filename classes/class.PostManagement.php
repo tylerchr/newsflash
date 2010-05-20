@@ -123,37 +123,44 @@ class PostManagement {
 		return false;
 	}
 	
-	public function GetPosts($id=-1) {
-		return $this->GetPostsThroughFilter();
+	public function GetPosts($id=-1, $page=0) {
+		return $this->ReturnPosts(null, $page);
 	}
 	
-	public function GetPostsFromCategory($category_id) {
+	public function GetPostsFromCategory($category_id, $page=0) {
 		$filters['post_category'] = $category_id>0 ? $category_id : NULL;;
-		return $this->GetPostsThroughFilter($filters);	
+		return $this->ReturnPosts($filters, $page);	
 	}
 	
-	public function GetPostsByAuthor($author_id) {
+	public function GetPostsByAuthor($author_id, $page=0) {
 		$filters['post_author'] = $author_id;
-		return $this->GetPostsThroughFilter($filters);
+		return $this->ReturnPosts($filters, $page);
 	}
 	
-	public function GetCertainPost($post_id) {
+	public function GetCertainPost($post_id, $page=0) {
 		$filters['post_id'] = $post_id;
-		$posts = $this->GetPostsThroughFilter($filters);
-		return array($posts[$post_id]);
+		return $this->ReturnPosts($filters, $page);
 	}
 	
-	public function GetPostsTaggedWith($tag) {
+	public function GetPostsTaggedWith($tag, $page=0) {
 		$filters['post_tags'] = "%" . $tag . "%";
-		return $this->GetPostsThroughFilter($filters);
+		return $this->ReturnPosts($filters, $page);
 	}
 	
-	public function GetPostsMatchingQuery($query) {
+	public function GetPostsMatchingQuery($query, $page=0) {
 		$filters['_separator'] = "OR";
 		$filters['post_title'] = "%" . $query . "%";
 		$filters['post_text'] = "%" . $query . "%";		
 		$filters['post_tags'] = "%" . $query . "%";
-		return $this->GetPostsThroughFilter($filters);
+		return $this->ReturnPosts($filters, $page);
+	}
+	
+	public function ReturnPosts($filter, $page) {
+		return array(
+			"posts" => $this->GetPostsThroughFilter($filter, $page),
+			"page" => $page['page'],
+			"results" => $this->CountPostsForFilter($filter)
+		);	
 	}
 	
 	public function GetCategoryTotals() {
@@ -271,7 +278,9 @@ class PostManagement {
 		
 	}
 	
-	public function GetPostsThroughFilter($filter=array(), $page=1) {
+	private function _GenerateQueryFromFilterAndPage($filter=array(), $page=0, $count=false) {
+		
+		require(dirname(__FILE__) . '/../configuration.php');
 		
 		// generate the WHERE statement
 		if (count($filter) > 0) {
@@ -331,22 +340,57 @@ class PostManagement {
 		
 		// generate the LIMIT statement
 		$limit_statement = "";
-		if ($page > 0) {
-			$limit = 2;
-			$offset = ($page-1) * $limit;
-			$limit_statement = " LIMIT " . $limit . " OFFSET " . $offset . " ";	
+		if ($page['page'] > 0) {
+			$offset = ($page['page']-1) * $page['limit'];
+			$limit_statement = " LIMIT " . $page['limit'] . " OFFSET " . $offset . " ";	
 		}
+		
+		$query = 'SELECT post_id, post_type, post_title, post_slug, post_author, post_text, post_link, post_image, post_date, post_category, post_tags FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . $query_where . ' ORDER BY post_date DESC' . $limit_statement . ";";
+		
+		return array("query" => $query, "variable_types" => $whereVariableTypes, "variables" => $whereVariables);
+		
+	}
+	
+	public function CountPostsForFilter($filter=array()) {
+		$metaquery = $this->_GenerateQueryFromFilterAndPage($filter, $page);
+		$index = strpos($metaquery['query'], " FROM");
+		$count_query = "SELECT COUNT(*) " . substr($metaquery['query'], $index);
 		
 		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
 		
-		$query = 'SELECT post_id, post_type, post_title, post_slug, post_author, post_text, post_link, post_image, post_date, post_category, post_tags FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . $query_where . ' ORDER BY post_date DESC' . $limit_statement . ";";
+		if ($stmt = $sql->mysqli->prepare($count_query)) {
+			
+			// attach the parameters, if there are any
+			if (count($metaquery['variable_types']) > 0) {
+				call_user_func_array(array($stmt, 'bind_param'), $metaquery['variables']);
+			}
+			
+			if ($stmt->execute()) {
+				$stmt->bind_result($count);
+				$stmt->fetch();
+				return $count;
+			}
+		
+		}
+		
+		return -1;
+	}
+	
+	public function GetPostsThroughFilter($filter=array(), $page=0) {
+		
+		require(dirname(__FILE__) . '/../configuration.php');
+		$sql = new mysql();
+		
+		$metaquery = $this->_GenerateQueryFromFilterAndPage($filter, $page);
+		
+		$query = $metaquery['query'];
 		
 		if ($stmt = $sql->mysqli->prepare($query)) {
 			
 			// attach the parameters, if there are any
-			if (count($whereVariableTypes) > 0) {
-				call_user_func_array(array($stmt, 'bind_param'), $whereVariables);
+			if (count($metaquery['variable_types']) > 0) {
+				call_user_func_array(array($stmt, 'bind_param'), $metaquery['variables']);
 			}
 			
 			$stmt->bind_result($pid, $ptype, $ptitle, $pslug, $pauthor, $ptext, $plink, $pimage, $pdate, $pcategory, $ptags);

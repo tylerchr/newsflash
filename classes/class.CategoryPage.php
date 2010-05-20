@@ -9,8 +9,8 @@ class CategoryPage extends Page {
 	
 	private $categoryID;
 	
-	public function __construct($pageid) {
-		$this->SetCategoryID($pageid);
+	public function SetPageVariables($vars) {
+		$this->SetCategoryID($vars['identifier']);	
 	}
 	
 	public function SetCategoryID($pageid) {
@@ -30,7 +30,9 @@ class CategoryPage extends Page {
 		require($nf['paths']['absolute'] . 'packages/packages.php');
 		
 		$pm = new PostManagement();
-		$posts = $pm->GetPostsFromCategory($this->GetCategoryID());
+		$post_data = $pm->GetPostsFromCategory($this->GetCategoryID(), $this->getPageData());
+		$posts = $post_data['posts'];
+		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
 		$cm = new CategoryManagement();
 		$category = $cm->GetCategoryWithID($this->GetCategoryID());
 		$cname = $category->name;

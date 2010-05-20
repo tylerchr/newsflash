@@ -9,8 +9,8 @@ class LiteralPage extends Page {
 	
 	private $pageID;
 	
-	public function __construct($pageid) {
-		$this->SetPageID($pageid);
+	public function SetPageVariables($vars) {
+		$this->SetPageID($vars['identifier']);
 	}
 	
 	public function SetPageID($pageid) {
@@ -31,6 +31,7 @@ class LiteralPage extends Page {
 		
 		$pam = new PageManagement();
 		$posts = $pam->GetCertainPage($this->GetPageID());
+		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
 		$PageConfig->variables->nf_page_title = $posts[0]->title . ' - ' . $nf['blog']['title'];
 		$PageConfig->type = 'page';
 		

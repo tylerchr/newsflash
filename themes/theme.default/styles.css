@@ -134,6 +134,69 @@ h3 {
 	padding-bottom: 100px;
 }
 
+nav#nf-pagination {
+	text-align: right;	
+}
+
+ul#nf-pagination-control {
+	list-style-type: none;
+	margin: 10px;
+	padding: 0;	
+	
+	margin-left: auto;
+	margin-right: auto;
+	display: inline-block;
+}
+
+ul#nf-pagination-control li {
+	display: inline-block;
+	margin: 0;
+	margin-left: 5px;
+}
+
+ul#nf-pagination-control li p {
+	display: block;
+	margin-right: 10px;
+	text-transform: uppercase;	
+	letter-spacing: 0.1em;
+}
+
+ul#nf-pagination-control li a {
+	border: 1px solid #eee;
+	text-align: center;
+	line-height: 20px;
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	padding: 5px;
+	margin: 0;
+}
+
+ul#nf-pagination-control .nf-current-page {
+	text-decoration: none;
+	border: 1px solid #2fa6e9;
+	background-color: #eef;
+}
+
+ul#nf-pagination-control li a:hover {
+	text-decoration: none;
+	border: 1px solid #2fa6e9;
+}
+
+.nf-search-highlight {
+	display: inline;
+	padding: 2px;
+	padding-left: 4px;
+	padding-right: 4px;
+	background-color: yellow;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f4ee00), to(#eecf00));
+	color: black;
+	text-shadow: none;
+	-webkit-box-shadow: 0px 0px 5px #555;
+	
+	-webkit-border-radius: 5px;
+}
+
 #posts {
 	margin-top: 20px;
 	width: 680px;

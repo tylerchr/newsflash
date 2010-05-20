@@ -9,7 +9,7 @@ require('classes/classes.php');
 require('configuration.php');
 
 $nf = new Newsflash();
-$page = new AuthorPage(intval($_GET['author']));
+$page = new AuthorPage($options);
 echo $nf->GetFinal($page);
 
 ?>

@@ -18,7 +18,7 @@ echo $ui->buildPage($pc);
 */
 
 $nf = new Newsflash();
-$page = new TagPage($_GET['tag']);
+$page = new TagPage();
 echo $nf->GetFinal($page);
 
 ?>

@@ -9,8 +9,8 @@ class PostingPage extends Page {
 	
 	private $postID;
 	
-	public function __construct($postid) {
-		$this->SetPostID($postid);
+	public function SetPageVariables($vars) {
+		$this->SetPostID($vars['identifier']);
 	}
 	
 	public function SetPostID($postid) {
@@ -30,7 +30,10 @@ class PostingPage extends Page {
 		require($nf['paths']['absolute'] . 'packages/packages.php');
 		
 		$pm = new PostManagement();
-		$posts = $pm->GetCertainPost($this->GetPostID());
+		$post_data = $pm->GetCertainPost($this->GetPostID());
+		$posts = array($post_data['posts'][52]);
+		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
+		echo print_r($post, true);
 		$PageConfig->variables->nf_page_title = $posts[0]->title . ' - ' . $nf['blog']['title'];
 		$PageConfig->variables->nf_posts = $this->FormatPost($posts[0], $PageConfig);
 		

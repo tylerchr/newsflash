@@ -9,8 +9,8 @@ class SearchPage extends Page {
 	
 	private $query;
 	
-	public function __construct($query) {
-		$this->SetQuery($query);
+	public function SetPageVariables($vars) {
+		$this->SetQuery($vars['query']);
 	}
 	
 	public function SetQuery($query) {
@@ -30,7 +30,9 @@ class SearchPage extends Page {
 		require($nf['paths']['absolute'] . 'packages/packages.php');
 		
 		$pm = new PostManagement();
-		$posts = $pm->GetPostsMatchingQuery($this->GetQuery());
+		$post_data = $pm->GetPostsMatchingQuery($this->GetQuery(), $this->getPageData());
+		$posts = $post_data['posts'];
+		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
 		$PageConfig->variables->nf_page_title = 'Results for \'' . $PageConfig->searchQuery . '\' - ' . $nf['blog']['title'];
 		
 		// render the page
@@ -39,7 +41,7 @@ class SearchPage extends Page {
 		} else {
 			if (count($posts) > 0) {
 				foreach ($posts as $single_post) {
-					$PageConfig->variables->nf_posts .= $this->FormatPost($single_post, $PageConfig);
+					$PageConfig->variables->nf_posts .= $this->FormatPost($single_post, $PageConfig, array($this->query));
 				}
 			} else {
 				require(dirname(__FILE__) . '/../configuration.php');
