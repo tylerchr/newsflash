@@ -8,7 +8,19 @@
 class Newsflash {
 	
 	public function GetFinal($Page) {
-		return $Page->Render($Page);
+		
+		$admin_bar = "";
+		// check if we are authenticated as an administrator
+		if ($_SESSION['auth_loggedin'] == true) {
+			$admin_bar = "<nav>
+				<ul>
+					<li>Logged in as me</li>
+					<li>Hello</li>
+				</ul>
+			</nav>";	
+		}
+		
+		return $admin_bar . $Page->Render($Page);
 	}
 		
 }

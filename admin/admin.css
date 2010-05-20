@@ -85,11 +85,18 @@ ul.link-button-bar li a:active {
 	padding-right: 10px;
 	text-decoration: none;
 	color: white;
-	text-shadow: #000 1px 1px 0px;
+	text-shadow: #866318 0px 1px 0px;
+	text-shadow: #936d1a 1px 1px 0px;
 	
 	background-color: #FBB917;
-	background: -webkit-gradient(linear, left top, left bottom, from(#FBB917), to(#C68E17));
+	background: -webkit-gradient(linear, left top, left bottom, from(#FBB917), to(#c99118));
+	background: -moz-linear-gradient(top, #FBB917, #c99118);
+	
+	/*	
+	background-color: #FBB917;
+	background: -webkit-gradient(linear, left top, left bottom, from(#00c42e), to(#008720));
 	background: -moz-linear-gradient(top, #FBB917, #C68E17);
+	*/
 	
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;

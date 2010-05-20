@@ -5,6 +5,7 @@
 		<?php echo $tags->nf_headscape; ?>
 	</head>
 	<body>
+		<?php echo $tags->nf_administration_bar; ?>
 		<div class="container">			
 			<header>
 				<h2><?php echo $tags->nf_blog_subtitle; ?></h2>

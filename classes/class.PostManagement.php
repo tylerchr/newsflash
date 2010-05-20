@@ -5,7 +5,11 @@
 	4 January 2010
 */
 
-class PostManagement {	
+class PostManagement {
+	
+	// ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+	//	Methods that perform WRITES to the database
+	// ---- ---- ---- ---- ---- ---- ---- ---- ---- 
 	
 	public function SavePost($post) {
 		
@@ -59,6 +63,37 @@ class PostManagement {
 		}		
 	}
 	
+	public function DeletePost($post_id) {
+		$pid = intval($post_id);
+		if ($this->DoesPostExist($pid)) {
+
+			require(dirname(__FILE__) . '/../configuration.php');
+			$sql = new mysql();
+			
+			if ($stmt = $sql->mysqli->prepare('DELETE FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' WHERE post_id=?')) {
+				
+				$stmt->bind_param("i", $pid);
+				if ($stmt->execute()) {
+					return true;
+				} else {
+					echo $sql->error();	
+				}
+			
+			} else {
+				echo $sql->mysqli->error;	
+			}
+			
+			return false;
+
+		} else {
+			// continue	
+		}	
+	}
+	
+	// ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+	//	Methods that only READ the database
+	// ---- ---- ---- ---- ---- ---- ---- ---- ---- 
+	
 	public function DoesPostExist($post_id) {
 		
 		require(dirname(__FILE__) . '/../configuration.php');
@@ -88,172 +123,37 @@ class PostManagement {
 		return false;
 	}
 	
-	public function DeletePost($post_id) {
-		$pid = intval($post_id);
-		if ($this->DoesPostExist($pid)) {
-
-			require(dirname(__FILE__) . '/../configuration.php');
-			$sql = new mysql();
-			
-			if ($stmt = $sql->mysqli->prepare('DELETE FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' WHERE post_id=?')) {
-				
-				$stmt->bind_param("i", $pid);
-				if ($stmt->execute()) {
-					return true;
-				} else {
-					echo $sql->error();	
-				}
-			
-			} else {
-				echo $sql->mysqli->error;	
-			}
-			
-			return false;
-
-		} else {
-			// continue	
-		}	
-	}
-	
 	public function GetPosts($id=-1) {
-		
-		require(dirname(__FILE__) . '/../configuration.php');
-		$sql = new mysql();
-		
-		if ($stmt = $sql->mysqli->prepare('SELECT post_id, post_type, post_title, post_slug, post_author, post_text, post_link, post_image, post_date, post_category, post_tags FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' ORDER BY post_date DESC')) {
-			
-			$stmt->bind_result($pid, $ptype, $ptitle, $pslug, $pauthor, $ptext, $plink, $pimage, $pdate, $pcategory, $ptags);
-			if ($stmt->execute()) {
-				while ($stmt->fetch()) {
-					
-					$cm = new CategoryManagement();
-					$am = new AuthorManagement();
-					
-					$post = new post();
-					$post->id = $pid;
-					$post->type = $ptype;
-					$post->title = $ptitle;
-					$post->slug = $pslug;
-					$post->author_id = $pauthor;
-					$post->author = $am->GetAuthorNameForID($pauthor);
-					$post->text = $ptext;
-					$post->link = $plink;
-					$post->image = $pimage;
-					$post->date = $pdate;
-					$post->category = $cm->CategoryNameWithID($pcategory);
-					$post->category_id = $pcategory;
-					$post->tags = $ptags;
-					
-					$posts[$pid] = $post;
-				}
-				return $posts;
-			} else {
-				echo $sql->error();	
-			}
-		
-		} else {
-			echo $sql->mysqli->error;	
-		}
-		
-		return false;
+		return $this->GetPostsThroughFilter();
 	}
 	
 	public function GetPostsFromCategory($category_id) {
-		
-		require(dirname(__FILE__) . '/../configuration.php');
-		$sql = new mysql();
-		
-		if ($category_id == -1) {
-			$query = 'SELECT post_id, post_type, post_title, post_slug, post_author, post_text, post_link, post_image, post_date, post_category, post_tags FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' WHERE post_category IS NULL AND ? ORDER BY post_date DESC';
-		} else {
-			$query = 'SELECT post_id, post_type, post_title, post_slug, post_author, post_text, post_link, post_image, post_date, post_category, post_tags FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' WHERE post_category = ? ORDER BY post_date DESC';
-		}
-		
-		if ($stmt = $sql->mysqli->prepare($query)) {
-			
-			
-			$stmt->bind_param("i", $category_id);
-			$stmt->bind_result($pid, $ptype, $ptitle, $pslug, $pauthor, $ptext, $plink, $pimage, $pdate, $pcategory, $ptags);
-			if ($stmt->execute()) {
-				while ($stmt->fetch()) {
-					
-					$cm = new CategoryManagement();
-					$am = new AuthorManagement();
-					
-					$post = new post();
-					$post->id = $pid;
-					$post->type = $ptype;
-					$post->title = $ptitle;
-					$post->slug = $pslug;
-					$post->author_id = $pauthor;
-					$post->author = $am->GetAuthorNameForID($pauthor);
-					$post->text = $ptext;
-					$post->link = $plink;
-					$post->image = $pimage;
-					$post->date = $pdate;
-					$post->category = $cm->CategoryNameWithID($pcategory);
-					$post->category_id = $pcategory;
-					$post->tags = $ptags;
-					
-					$posts[$pid] = $post;
-				}
-				return $posts;
-			} else {
-				echo $sql->error();	
-			}
-		
-		} else {
-			echo $sql->mysqli->error;	
-		}
-		
-		return false;
-			
+		$filters['post_category'] = $category_id>0 ? $category_id : NULL;;
+		return $this->GetPostsThroughFilter($filters);	
 	}
 	
 	public function GetPostsByAuthor($author_id) {
-		
-		require(dirname(__FILE__) . '/../configuration.php');
-		$sql = new mysql();
-		
-		if ($stmt = $sql->mysqli->prepare('SELECT post_id, post_type, post_title, post_slug, post_author, post_text, post_link, post_image, post_date, post_category, post_tags FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' WHERE post_author = ? ORDER BY post_date DESC')) {
-			
-			
-			$stmt->bind_param("i", $author_id);
-			$stmt->bind_result($pid, $ptype, $ptitle, $pslug, $pauthor, $ptext, $plink, $pimage, $pdate, $pcategory, $ptags);
-			if ($stmt->execute()) {
-				while ($stmt->fetch()) {
-					
-					$cm = new CategoryManagement();
-					$am = new AuthorManagement();
-					
-					$post = new post();
-					$post->id = $pid;
-					$post->type = $ptype;
-					$post->title = $ptitle;
-					$post->slug = $pslug;
-					$post->author_id = $pauthor;
-					$post->author = $am->GetAuthorNameForID($pauthor);
-					$post->text = $ptext;
-					$post->link = $plink;
-					$post->image = $pimage;
-					$post->date = $pdate;
-					$post->category = $cm->CategoryNameWithID($pcategory);
-					$post->category_id = $pcategory;
-					$post->tags = $ptags;
-					
-					$posts[$pid] = $post;
-				}
-				return $posts;
-			} else {
-				echo $sql->error();	
-			}
-		
-		} else {
-			echo $sql->mysqli->error;	
-		}
-		
-		return false;
-			
+		$filters['post_author'] = $author_id;
+		return $this->GetPostsThroughFilter($filters);
+	}
+	
+	public function GetCertainPost($post_id) {
+		$filters['post_id'] = $post_id;
+		$posts = $this->GetPostsThroughFilter($filters);
+		return array($posts[$post_id]);
+	}
+	
+	public function GetPostsTaggedWith($tag) {
+		$filters['post_tags'] = "%" . $tag . "%";
+		return $this->GetPostsThroughFilter($filters);
+	}
+	
+	public function GetPostsMatchingQuery($query) {
+		$filters['_separator'] = "OR";
+		$filters['post_title'] = "%" . $query . "%";
+		$filters['post_text'] = "%" . $query . "%";		
+		$filters['post_tags'] = "%" . $query . "%";
+		return $this->GetPostsThroughFilter($filters);
 	}
 	
 	public function GetCategoryTotals() {
@@ -282,139 +182,6 @@ class PostManagement {
 		
 		} else {
 			echo $sql->mysqli->error;
-		}
-		
-		return false;
-	}
-	
-	public function GetCertainPost($post_id) {
-		
-		require(dirname(__FILE__) . '/../configuration.php');
-		$sql = new mysql();
-		
-		if ($stmt = $sql->mysqli->prepare('SELECT post_id, post_type, post_title, post_slug, post_author, post_text, post_link, post_image, post_date, post_category, post_tags FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' WHERE post_id = ?')) {
-			
-			$stmt->bind_param("i", $post_id);
-			$stmt->bind_result($pid, $ptype, $ptitle, $pslug, $pauthor, $ptext, $plink, $pimage, $pdate, $pcategory, $ptags);
-			if ($stmt->execute()) {
-					$stmt->fetch();
-					
-					$cm = new CategoryManagement();
-					$am = new AuthorManagement();
-					
-					$post = new post();
-					$post->id = $pid;
-					$post->type = $ptype;
-					$post->title = $ptitle;
-					$post->slug = $pslug;
-					$post->author_id = $pauthor;
-					$post->author = $am->GetAuthorNameForID($pauthor);
-					$post->text = $ptext;
-					$post->link = $plink;
-					$post->image = $pimage;
-					$post->date = $pdate;
-					$post->category = $cm->CategoryNameWithID($pcategory);
-					$post->category_id = $pcategory;
-					$post->tags = $ptags;
-					
-					return array($post);
-			} else {
-				echo $sql->error();	
-			}
-		
-		} else {
-			echo $sql->mysqli->error;	
-		}
-		
-		return false;
-	
-	}
-	
-	public function GetPostsTaggedWith($tag) {
-		
-		require(dirname(__FILE__) . '/../configuration.php');
-		$sql = new mysql();
-
-		if ($stmt = $sql->mysqli->prepare('SELECT post_id, post_type, post_title, post_slug, post_author, post_text, post_link, post_image, post_date, post_category, post_tags FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' WHERE post_tags LIKE CONCAT(\'%\', ?, \'%\') ORDER BY post_date DESC')) {
-			
-			
-			$stmt->bind_param("s", $tag);
-			$stmt->bind_result($pid, $ptype, $ptitle, $pslug, $pauthor, $ptext, $plink, $pimage, $pdate, $pcategory, $ptags);
-			if ($stmt->execute()) {
-				while ($stmt->fetch()) {
-					
-					$cm = new CategoryManagement();
-					$am = new AuthorManagement();
-					
-					$post = new post();
-					$post->id = $pid;
-					$post->type = $ptype;
-					$post->title = $ptitle;
-					$post->slug = $pslug;
-					$post->author_id = $pauthor;
-					$post->author = $am->GetAuthorNameForID($pauthor);
-					$post->text = $ptext;
-					$post->link = $plink;
-					$post->image = $pimage;
-					$post->date = $pdate;
-					$post->category = $cm->CategoryNameWithID($pcategory);
-					$post->category_id = $pcategory;
-					$post->tags = $ptags;
-					
-					$posts[$pid] = $post;
-				}
-				return $posts;
-			} else {
-				echo $sql->error();	
-			}
-		
-		} else {
-			echo $sql->mysqli->error;	
-		}
-		
-		return false;
-	}
-	
-	public function GetPostsMatchingQuery($query) {
-		
-		require(dirname(__FILE__) . '/../configuration.php');
-		$sql = new mysql();
-
-		if ($stmt = $sql->mysqli->prepare('SELECT post_id, post_type, post_title, post_slug, post_author, post_text, post_link, post_image, post_date, post_category, post_tags FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' WHERE post_title LIKE CONCAT(\'%\', ?, \'%\') OR post_text LIKE CONCAT(\'%\', ?, \'%\') OR post_tags LIKE CONCAT(\'%\', ?, \'%\') ORDER BY post_date DESC')) {
-			
-			
-			$stmt->bind_param("sss", $query, $query, $query);
-			$stmt->bind_result($pid, $ptype, $ptitle, $pslug, $pauthor, $ptext, $plink, $pimage, $pdate, $pcategory, $ptags);
-			if ($stmt->execute()) {
-				while ($stmt->fetch()) {
-					
-					$cm = new CategoryManagement();
-					$am = new AuthorManagement();
-					
-					$post = new post();
-					$post->id = $pid;
-					$post->type = $ptype;
-					$post->title = $ptitle;
-					$post->slug = $pslug;
-					$post->author_id = $pauthor;
-					$post->author = $am->GetAuthorNameForID($pauthor);
-					$post->text = $ptext;
-					$post->link = $plink;
-					$post->image = $pimage;
-					$post->date = $pdate;
-					$post->category = $cm->CategoryNameWithID($pcategory);
-					$post->category_id = $pcategory;
-					$post->tags = $ptags;
-					
-					$posts[$pid] = $post;
-				}
-				return $posts;
-			} else {
-				echo $sql->error();	
-			}
-		
-		} else {
-			echo $sql->mysqli->error;	
 		}
 		
 		return false;
@@ -499,13 +266,89 @@ class PostManagement {
 		$lowend = $core->TimeToUniversal($lowend);
 		$highend = $core->TimeToUniversal($highend);
 		
+		$filters['post_date'] = array($lowend, $highend);
+		return $this->GetPostsThroughFilter($filters);
+		
+	}
+	
+	public function GetPostsThroughFilter($filter=array(), $page=1) {
+		
+		// generate the WHERE statement
+		if (count($filter) > 0) {
+			foreach ($filter as $key => $value) {
+				
+				// range array
+				if (is_array($value) && count($value) == 2 && is_int($value[0]) && is_int($value[1])) {
+					$whereLine[] = $key . " >=  ?";
+					$whereLine[] = $key . " <=  ?";
+					$whereVariableTypes[] = "i";
+					$whereVariableTypes[] = "i";
+					$whereVariables[] = $value[0];
+					$whereVariables[] = $value[1];
+					
+				// null item
+				} else if (is_null($value)) {
+					$whereLine[] = $key . " IS NULL";	
+					
+				// integer values
+				} else if (is_int($value)) {
+					$whereLine[] = $key . " = ?";
+					$whereVariableTypes[] = "i";
+					$whereVariables[] = $value;
+				
+				// string value
+				} else if (is_string($value) && substr($key, 0, 1) != "_") {
+					$whereVariableTypes[] = "s";
+					// LIKE-style queries
+					if (substr($value,0,1) == "%" && substr($value,-1) == "%") {
+						$newValue = substr(substr($value, 1), 0, strlen($value)-2);
+						$whereLine[] = $key . " LIKE CONCAT('%', ?, '%')";
+						$whereVariables[] = $newValue;
+					} else {						
+						$whereLine[] = $key . " = ?";
+						$whereVariables[] = $value;
+					}
+					
+				// unknown values value (toss the filter variables)
+				} else if (substr($key, 0, 1) != "_") {
+					// I suck as a developer, because this should never be reached
+					echo "The infamous fourth type: " . $value . "<br />";
+				}
+			}
+			
+			if (strlen($filter['_separator']) > 0) {
+				$separator = $filter['_separator'];
+			} else {
+				$separator = "AND";	
+			}
+			
+			$query_where = " WHERE ";
+			$query_where .= implode(" " . $separator . " ", $whereLine);
+			if (count($whereVariableTypes) > 0) {
+				array_unshift($whereVariables, implode($whereVariableTypes));
+			}
+		}
+		
+		// generate the LIMIT statement
+		$limit_statement = "";
+		if ($page > 0) {
+			$limit = 2;
+			$offset = ($page-1) * $limit;
+			$limit_statement = " LIMIT " . $limit . " OFFSET " . $offset . " ";	
+		}
+		
 		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
-
-		if ($stmt = $sql->mysqli->prepare('SELECT post_id, post_type, post_title, post_slug, post_author, post_text, post_link, post_image, post_date, post_category, post_tags FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' WHERE post_date >= ? AND post_date <= ? ORDER BY post_date DESC')) {
+		
+		$query = 'SELECT post_id, post_type, post_title, post_slug, post_author, post_text, post_link, post_image, post_date, post_category, post_tags FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . $query_where . ' ORDER BY post_date DESC' . $limit_statement . ";";
+		
+		if ($stmt = $sql->mysqli->prepare($query)) {
 			
+			// attach the parameters, if there are any
+			if (count($whereVariableTypes) > 0) {
+				call_user_func_array(array($stmt, 'bind_param'), $whereVariables);
+			}
 			
-			$stmt->bind_param("ii", $lowend, $highend);
 			$stmt->bind_result($pid, $ptype, $ptitle, $pslug, $pauthor, $ptext, $plink, $pimage, $pdate, $pcategory, $ptags);
 			if ($stmt->execute()) {
 				while ($stmt->fetch()) {
@@ -525,6 +368,7 @@ class PostManagement {
 					$post->image = $pimage;
 					$post->date = $pdate;
 					$post->category = $cm->CategoryNameWithID($pcategory);
+					$post->category_id = $pcategory;
 					$post->tags = $ptags;
 					
 					$posts[$pid] = $post;
