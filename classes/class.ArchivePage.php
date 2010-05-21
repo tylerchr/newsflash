@@ -12,10 +12,15 @@ class ArchivePage extends Page {
 	private $day;
 	
 	public function SetPageVariables($vars) {
-		echo "Setting identifier";
-		$this->SetCategoryID($vars['id']);
+		if ($vars['year'] > 0)
+			$this->SetYear($vars['year']);
+		if ($vars['month'] > 0)	
+			$this->SetMonth($vars['month']);
+		if ($vars['day'] > 0)
+			$this->SetDay($vars['day']);
 	}
 	
+	/*
 	public function __construct($year=-1, $month=-1, $day=-1) {
 		if ($year > 0) {
 			$this->SetYear($year);
@@ -29,6 +34,7 @@ class ArchivePage extends Page {
 			$this->SetDay($day);
 		}
 	}
+	*/
 	
 	public function SetYear($year) {
 		if (is_numeric($year)) {
@@ -88,15 +94,16 @@ class ArchivePage extends Page {
 		require($nf['paths']['absolute'] . 'packages/packages.php');
 		
 		$pm = new PostManagement();
-		$posts = $pm->GetPostsFrom($this->GetYear(), $this->GetMonth(), $this->GetDay());
+		$post_data = $pm->GetPostsFrom($this->GetYear(), $this->GetMonth(), $this->GetDay(), $this->getPageData());
+		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
 		$PageConfig->variables->nf_page_title = 'Archives for ' . $this->TimePeriodString();
 		
 		// render the page
 		if ($PageConfig->PostListStyle == 'condensed') {
-			$PageConfig->variables->nf_posts = $this->FormatCondensedPosts($posts, $PageConfig);
+			$PageConfig->variables->nf_posts = $this->FormatCondensedPosts($post_data['posts'], $PageConfig);
 		} else {
-			if (count($posts) > 0) {
-				foreach ($posts as $single_post) {
+			if (count($post_data['posts']) > 0) {
+				foreach ($post_data['posts'] as $single_post) {
 					$PageConfig->variables->nf_posts .= $this->FormatPost($single_post, $PageConfig);
 				}
 			} else {

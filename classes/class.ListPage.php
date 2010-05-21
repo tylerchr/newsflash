@@ -16,16 +16,15 @@ class ListPage extends Page {
 		$pm = new PostManagement();
 		$pageNumber = $this->getPageData();
 		$post_data = $pm->GetPosts(null, $this->getPageData());
-		$posts = $post_data['posts'];
 		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
 		$PageConfig->variables->nf_page_title = $nf['blog']['title'];
 		
 		// render the page
 		if ($PageConfig->PostListStyle == 'condensed') {
-			$PageConfig->variables->nf_posts = $this->FormatCondensedPosts($posts, $PageConfig);
+			$PageConfig->variables->nf_posts = $this->FormatCondensedPosts($post_data['posts'], $PageConfig);
 		} else {
-			if (count($posts) > 0) {
-				foreach ($posts as $single_post) {
+			if (count($post_data['posts']) > 0) {
+				foreach ($post_data['posts'] as $single_post) {
 					$PageConfig->variables->nf_posts .= $this->FormatPost($single_post, $PageConfig);
 				}
 			} else {

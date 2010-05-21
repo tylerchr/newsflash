@@ -81,18 +81,23 @@ class Page {
 		$current_page = $pageData['page'];
 		$total_pages = $pageData['total_pages'];
 		
-		$control = "<nav id=\"nf-pagination\"><ul id=\"nf-pagination-control\"><li><p>Page</p></li>";
-		for ($i=1; $i<=$total_pages; $i++) {
-			if ($i == $current_page) {
-				$class = " class=\"nf-current-page\"";	
-			} else {
-				$class = "";	
+		if ($total_pages > 1) {
+		
+			$control = "<nav id=\"nf-pagination\"><ul id=\"nf-pagination-control\"><li><p>Page</p></li>";
+			for ($i=1; $i<=$total_pages; $i++) {
+				if ($i == $current_page) {
+					$class = " class=\"nf-current-page\"";	
+				} else {
+					$class = "";	
+				}
+				
+				$control .= "<li><a href=\"?p=" . $i . "\"" . $class . ">" . $i . "</a></li>";
 			}
-			
-			$control .= "<li><a href=\"?p=" . $i . "\"" . $class . ">" . $i . "</a></li>";
+			$control .= "</ul></nav>";			
+		} else {
+			$control = "";
 		}
-		$control .= "</ul></nav>";
-		return $control;	
+		return $control;
 	}
 	
 	public function SetGenericTags($PageConfig) {

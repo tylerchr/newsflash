@@ -224,57 +224,55 @@ class PostManagement {
 		return false;
 	}
 	
-	public function GetPostsFrom() {
+	public function GetPostsFrom($year=0, $month=0, $day=0, $page=0) {
+		
+		// default precision to year only
+		$precision = 0;
+			// 0, year
+			// 1, year + month
+			// 2, year + month + day
+		
+		// fall back to this year
+		if ($year < 0)
+			$year = date("Y", time());
+		
 		$months = range(1,12);
-		$days = range(1,31);
-		
-		$core = new Core();
-		
-		// Validate ranges
-		if (func_num_args() >= 1) {
-			$year = func_get_arg(0);
-			if ($year < 0) {
-				$year = date("Y", time());	
+		if (in_array($month, $months)) {
+			// we have a valid month
+			$precision = 1;
+			$days = range(1,31);	
+			if (in_array($day, $days)) {
+				// we have a valid day
+				$precision = 2;
 			}
+				
 		}
 		
-		if (func_num_args() >= 2) {				
-			$month = func_get_arg(1);
-			if (!in_array($month, $months)) {
-				return $this->GetPostsFrom($year);
-			}
-		}
-		
-		if (func_num_args() >= 3) {
-			$day = func_get_arg(2);
-			if (!in_array($day, $days)) {
-				return $this->GetPostsFrom($year, $month);
-			}
-		}
-		
-		// Get proper lows and highs				
-		if (func_num_args() == 1) {
-			$lowend = mktime(0,0,0,1,1,$year);
-			$highend = mktime(23,59,59,12,31,$year);
-			// year
-		} else if (func_num_args() == 2) {
-			$lowend = mktime(0,0,0,$month,1,$year);
-			$highend = mktime(23,59,59,$month,cal_days_in_month(CAL_GREGORIAN,$month,$year),$year);
-			// year+month
-		} else if (func_num_args() == 3) {
-			$lowend = mktime(0,0,0,$month,$day,$year);
-			$highend = mktime(23,59,59,$month,$day,$year);
-			// year+month+day
-		} else {
-			return $this->GetPostsFrom(date("Y", time()));
+		switch ($precision) {
+			case 1:
+				// year + month
+				$lowend = mktime(0,0,0,$month,1,$year);
+				$highend = mktime(23,59,59,$month,cal_days_in_month(CAL_GREGORIAN,$month,$year),$year);
+				break;
+			case 2:
+				// year + month + day
+				$lowend = mktime(0,0,0,$month,$day,$year);
+				$highend = mktime(23,59,59,$month,$day,$year);
+				break;
+			default:
+				// default, which is the same as year only
+				$lowend = mktime(0,0,0,1,1,$year);
+				$highend = mktime(23,59,59,12,31,$year);
+				break;
 		}
 		
 		// Correct for Universal time
+		$core = new Core();
 		$lowend = $core->TimeToUniversal($lowend);
 		$highend = $core->TimeToUniversal($highend);
 		
 		$filters['post_date'] = array($lowend, $highend);
-		return $this->GetPostsThroughFilter($filters);
+		return $this->ReturnPosts($filters, $page);
 		
 	}
 	
