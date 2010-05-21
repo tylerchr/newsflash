@@ -31,9 +31,9 @@ class PostingPage extends Page {
 		
 		$pm = new PostManagement();
 		$post_data = $pm->GetCertainPost($this->GetPostID());
-		$posts = array($post_data['posts'][52]);
+		$posts = array($post_data['posts'][$this->GetPostID()]);
+
 		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
-		echo print_r($post, true);
 		$PageConfig->variables->nf_page_title = $posts[0]->title . ' - ' . $nf['blog']['title'];
 		$PageConfig->variables->nf_posts = $this->FormatPost($posts[0], $PageConfig);
 		
