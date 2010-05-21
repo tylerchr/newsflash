@@ -20,6 +20,7 @@ $nf['database']['post_table'] =		'posts';
 $nf['database']['page_table'] =		'pages';
 $nf['database']['category_table'] =	'categories';
 $nf['database']['author_table'] =	'authors';
+$nf['database']['options_table'] =	'options';
 
 $nf['template']['main'] =			'main.php';
 $nf['template']['page'] =			'page.html';
