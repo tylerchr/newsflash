@@ -58,9 +58,11 @@ class Page {
 	public function Render($Page) {
 		$this->SetTheme('theme.default');
 		
+		
 		$PageConfig = $Page->ConstructContents();
 		
 		// here would be the place to append a pagination control
+		// $PageConfig->variables->nf_posts = $this->PaginationControl() . $PageConfig->variables->nf_posts; // puts pagination control at top
 		$PageConfig->variables->nf_posts .= $this->PaginationControl();
 		
 		$PageConfig = $this->SetGenericTags($PageConfig);
@@ -81,6 +83,15 @@ class Page {
 		$current_page = $pageData['page'];
 		$total_pages = $pageData['total_pages'];
 		
+		// get the string of pre-existing variables, to which we'll append the new page#
+		foreach ($_GET as $key => $value) {
+			if ($key != "p")
+				$gets[] = $key."=".$value;	
+		}
+		if (count($gets) > 0) {
+			$getstring = implode("&", $gets);
+		}
+		
 		if ($total_pages > 1) {
 		
 			$control = "<nav id=\"nf-pagination\"><ul id=\"nf-pagination-control\"><li><p>Page</p></li>";
@@ -91,7 +102,7 @@ class Page {
 					$class = "";	
 				}
 				
-				$control .= "<li><a href=\"?p=" . $i . "\"" . $class . ">" . $i . "</a></li>";
+				$control .= "<li><a href=\"?" . $getstring . "&p=" . $i . "\"" . $class . ">" . $i . "</a></li>";
 			}
 			$control .= "</ul></nav>";			
 		} else {
