@@ -20,22 +20,6 @@ class ArchivePage extends Page {
 			$this->SetDay($vars['day']);
 	}
 	
-	/*
-	public function __construct($year=-1, $month=-1, $day=-1) {
-		if ($year > 0) {
-			$this->SetYear($year);
-		}
-		
-		if ($month > 0) {
-			$this->SetMonth($month);
-		}
-		
-		if ($day > 0) {
-			$this->SetDay($day);
-		}
-	}
-	*/
-	
 	public function SetYear($year) {
 		if (is_numeric($year)) {
 			$this->year = $year;	
