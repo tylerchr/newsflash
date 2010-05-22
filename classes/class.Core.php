@@ -9,12 +9,14 @@ class Core {
 	
 	public function TimeToUniversal($time) {
 		require(dirname(__FILE__) . '/../configuration.php');
-		return $time + ($nf['blog']['timezone'] * 3600);	
+		$opt = new Options();
+		return $time + ($opt->ValueForKey("blog/timezone") * 3600);	
 	}
 	
 	public function TimeFromUniversal($time) {
 		require(dirname(__FILE__) . '/../configuration.php');
-		return $time - ($nf['blog']['timezone'] * 3600);	
+		$opt = new Options();
+		return $time - ($opt->ValueForKey("blog/timezone") * 3600);	
 	}
 	
 	public function CreatePasswordHash($password) {

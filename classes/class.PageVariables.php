@@ -11,10 +11,10 @@ class PageVariables {
 	
 	public function __construct() {
 		
-		require(dirname(__FILE__) . '/../configuration.php');
+		$opt = new Options();
 		
-		$this->nf_blog_title =		$nf['blog']['title'];
-		$this->nf_blog_subtitle =	$nf['blog']['subtitle'];
+		$this->nf_blog_title =		$opt->ValueForKey("blog/title");
+		$this->nf_blog_subtitle =	$opt->ValueForKey("blog/subtitle");
 		$this->nf_title =			NULL;
 		$this->nf_headscape =		NULL;
 		$this->nf_search_bar =		'<form action="search.php" method="get">' .

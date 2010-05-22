@@ -28,10 +28,10 @@ class AuthorManagement {
 	
 	public function GetAuthorsWithClause($where, $type, $param) {
 		
-		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
+		$opt = new Options();
 		
-		$query = 'SELECT author_id, author_first_name, author_last_name, author_username, author_pwhash, author_email, author_bio, author_homepage, author_created_date FROM ' . $nf['database']['table_prefix'] . $nf['database']['author_table'] . ' WHERE ' . $where;
+		$query = 'SELECT author_id, author_first_name, author_last_name, author_username, author_pwhash, author_email, author_bio, author_homepage, author_created_date FROM ' . $opt->ValueForKey("database/table_prefix") . $opt->ValueForKey("database/author_table") . ' WHERE ' . $where;
 		if ($stmt = $sql->mysqli->prepare($query)) {
 			
 			$stmt->bind_param($type, $param);
@@ -65,10 +65,10 @@ class AuthorManagement {
 	
 	public function SaveAuthor($author) {
 		
-		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
+		$opt = new Options();
 		
-		if ($stmt = $sql->mysqli->prepare('INSERT INTO ' . $nf['database']['table_prefix'] . $nf['database']['author_table'] . ' (author_first_name, author_last_name, author_pwhash, author_email, author_created_date) VALUES (?, ?, ?, ?)')) {
+		if ($stmt = $sql->mysqli->prepare('INSERT INTO ' . $opt->ValueForKey("database/table_prefix") . $opt->ValueForKey("database/author_table") . ' (author_first_name, author_last_name, author_pwhash, author_email, author_created_date) VALUES (?, ?, ?, ?)')) {
 			
 			$stmt->bind_param("sssi", $author->name, $author->password_hash, $author->email, $author->created_at);
 			if ($stmt->execute()) {

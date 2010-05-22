@@ -45,8 +45,11 @@ class Page {
 	}
 	
 	public function setPageData($page) {
+		
 		require(dirname(__FILE__) . '/../configuration.php');
-		$page['limit'] = $nf['posts']['posts_per_page'];
+		
+		$opt = new Options();
+		$page['limit'] = $opt->ValueForKey("posts/posts_per_page");
 		$page['total_pages'] = ceil($page['results'] / $page['limit']);
 		$this->page = $page;
 	}
@@ -114,8 +117,14 @@ class Page {
 	public function SetGenericTags($PageConfig) {
 		require(dirname(__FILE__) . '/../configuration.php');
 		
-		$PageConfig->variables->nf_blog_title =		$nf['blog']['title'];
-		$PageConfig->variables->nf_blog_subtitle =	$nf['blog']['subtitle'];
+		$opt = new Options();
+		
+		$blog_title = $opt->ValueForKey("blog/title");
+		$blog_subtitle = $opt->ValueForKey("blog/subtitle");
+		$siteroot = $opt->ValueForKey("paths/siteroot");
+		
+		$PageConfig->variables->nf_blog_title =		$blog_title;
+		$PageConfig->variables->nf_blog_subtitle =	$blog_subtitle;
 		$PageConfig->variables->nf_site_root =		'../../';
 		$PageConfig->variables->nf_category_list =	$this->GetCategoryList();
 		$PageConfig->variables->nf_tag_list =		$this->GetTagList();
@@ -124,7 +133,7 @@ class Page {
 		$PageConfig->variables->nf_pages_list =		$this->GetPageList();
 		$PageConfig->variables->nf_search_bar =		$this->GetSearchBar();
 		
-		$PageConfig->variables->nf_siteroot =		$nf['paths']['siteroot'];
+		$PageConfig->variables->nf_siteroot =		$siteroot;
 		
 		if (method_exists($post, 'TagCloud'))
 			$tags->nf_post_tags =		$post->TagCloud();
@@ -134,13 +143,17 @@ class Page {
 	
 	public function SetTheme($theme_name) {
 		require(dirname(__FILE__) . '/../configuration.php');
-		$path = $nf['paths']['absolute'] . 'themes/' . $theme_name . '/';
+		
+		$opt = new Options();		
+		$path_absolute = $opt->ValueForKey("paths/absolute");
+		$path_siteroot = $opt->ValueForKey("paths/siteroot");
+		$path = $path_absolute . 'themes/' . $theme_name . '/';
 		
 		// If theme files exist, set it up and return true
 		if (is_dir($path)) {
 			$this->theme = $theme_name;
-			$this->theme_path = $nf['paths']['absolute'] . 'themes/' . $this->theme . '/';
-			$this->theme_url = $nf['paths']['siteroot'] . 'themes/' . $this->theme . '/';	
+			$this->theme_path = $absolute_path . 'themes/' . $this->theme . '/';
+			$this->theme_url = $path_siteroot . 'themes/' . $this->theme . '/';	
 			return true;
 		} else {
 			return false;	
@@ -150,9 +163,12 @@ class Page {
 	public function OpenTemplate($template, $PageConfig) {
 		require(dirname(__FILE__) . '/../configuration.php');
 		
+		$opt = new Options();
+		$template_filename = $opt->ValueForKey("template/" . $template);
+		
 		$tags = $PageConfig->variables;
 		ob_start();
-		include($this->theme_path . $nf['template'][$template]);
+		include($this->theme_path . $template_filename);
 		$page = ob_get_contents();
 		ob_end_clean();
 		
@@ -162,6 +178,7 @@ class Page {
 	public function FormatPost($post, $PageConfig, $highlight=array()) {
 		
 		$core = new Core();
+		$opt = new Options;
 		
 		// Assign post-related tags
 		$PageConfig->variables->nf_post_id =		$post->id;
@@ -174,7 +191,7 @@ class Page {
 		$PageConfig->variables->nf_link_link =		$post->link;
 		$PageConfig->variables->nf_image_image =	$post->image;
 		$PageConfig->variables->nf_post_category =	'<a href="category.php?cid=' . $post->category_id . '">' . $post->category . '</a>';
-		$PageConfig->variables->nf_post_permalink =	$nf['paths']['siteroot'] . 'post.php?post=' . $post->id;
+		$PageConfig->variables->nf_post_permalink =	$opt->ValueForKey("paths/siteroot") . 'post.php?post=' . $post->id;
 		
 		$post_html = $this->OpenTemplate('post_' . $post->type, $PageConfig);
 		
@@ -209,7 +226,8 @@ class Page {
 				
 		} else {
 			require(dirname(__FILE__) . '/../configuration.php');
-			return $nf['error']['no_posts'];	
+			$opt = new Options();
+			return $opt->ValueForKey("error/no_posts");
 		}
 	}
 	
@@ -218,8 +236,9 @@ class Page {
 		
 		// Markdown-format the text if Markdown is available, otherwise return the input text
 		$pf = new PackageFinder();
+		$opt = new Options();
 		if ($pf->PackageEnabled('markdown') && !function_exists('Markdown')) {
-			$markdown_path = $nf['paths']['absolute'] . 'packages/pkg.markdown/markdown.php';
+			$markdown_path = $opt->ValueForKey("paths/absolute") . 'packages/pkg.markdown/markdown.php';
 			require($markdown_path);
 		}
 		

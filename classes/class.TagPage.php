@@ -26,14 +26,14 @@ class TagPage extends Page {
 	}
 	
 	public function ConstructContents() {
-		require(dirname(__FILE__) . '/../configuration.php');
-		require($nf['paths']['absolute'] . 'packages/packages.php');
+		$opt = new Options();
+		require($opt->ValueForKey("paths/absolute") . 'packages/packages.php');
 		
 		$pm = new PostManagement();
 		$post_data = $pm->GetPostsTaggedWith($this->GetTag(), $this->getPageData());
 		$posts = $post_data['posts'];
 		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
-		$PageConfig->variables->nf_page_title = 'Tagged with \'' . $this->GetTag() . '\' - ' . $nf['blog']['title'];
+		$PageConfig->variables->nf_page_title = 'Tagged with \'' . $this->GetTag() . '\' - ' . $opt->ValueForKey("blog/title");
 		
 		// render the page
 		if ($PageConfig->PostListStyle == 'condensed') {
@@ -44,8 +44,7 @@ class TagPage extends Page {
 					$PageConfig->variables->nf_posts .= $this->FormatPost($single_post, $PageConfig);
 				}
 			} else {
-				require(dirname(__FILE__) . '/../configuration.php');
-				$PageConfig->variables->nf_posts = $nf['error']['no_posts'];	
+				$PageConfig->variables->nf_posts = $opt->ValueForKey("error/no_posts");	
 			}
 		}
 		

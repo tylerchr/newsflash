@@ -55,12 +55,14 @@ class Options {
 	
 	private function _ConfigFileValueForKey($key) {
 		
+		// get the configuration.php array
 		require(dirname(__FILE__) . '/../configuration.php');
+		$base = $nf;
+		
+		// assume that key does not exist
+		$fail = false;
 		
 		$key_parts = explode("/", $key);
-		
-		$fail = false;
-		$base = $nf;
 		foreach ($key_parts as $part) {
 			if (isset($base[$part])) {
 				$base = $base[$part];

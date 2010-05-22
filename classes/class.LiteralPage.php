@@ -26,13 +26,14 @@ class LiteralPage extends Page {
 	}
 	
 	public function ConstructContents() {
-		require(dirname(__FILE__) . '/../configuration.php');
-		require($nf['paths']['absolute'] . 'packages/packages.php');
+		
+		$opt = new Options();
+		require($opt->ValueForKey("paths/absolute") . 'packages/packages.php');
 		
 		$pam = new PageManagement();
 		$posts = $pam->GetCertainPage($this->GetPageID());
 		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
-		$PageConfig->variables->nf_page_title = $posts[0]->title . ' - ' . $nf['blog']['title'];
+		$PageConfig->variables->nf_page_title = $posts[0]->title . ' - ' . $opt->ValueForKey("blog/title");
 		$PageConfig->type = 'page';
 		
 		// render the page
@@ -45,7 +46,7 @@ class LiteralPage extends Page {
 				}
 			} else {
 				require(dirname(__FILE__) . '/../configuration.php');
-				$PageConfig->variables->nf_posts = $nf['error']['no_posts'];	
+				$PageConfig->variables->nf_posts = $opt->ValueForKey("error/no_posts");
 			}
 		}
 		
@@ -55,13 +56,14 @@ class LiteralPage extends Page {
 	public function FormatPost($post, $PageConfig) {
 		
 		$core = new Core();
+		$opt = new Options();
 			
 		// Assign page-related tags
 		$PageConfig->variables->nf_page_id =			$post->id;
 		$PageConfig->variables->nf_page_title =		$post->title;
 		$PageConfig->variables->nf_page_date =		date("j F Y", $core->TimeFromUniversal($post->date));
 		$PageConfig->variables->nf_page_text =		$this->FormatMarkdown($post->text);
-		$PageConfig->variables->nf_page_permalink =	$nf['paths']['siteroot'] . 'page.php?page=' . $post->id;
+		$PageConfig->variables->nf_page_permalink =	$opt->ValueForKey("paths/siteroot") . 'page.php?page=' . $post->id;
 		
 		$post_html = $this->OpenTemplate('page', $PageConfig);	
 		

@@ -9,10 +9,10 @@ class TagManagement {
 	
 	public function GetAllTags() {
 		
-		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
+		$opt = new Options();
 		
-		if ($stmt = $sql->mysqli->prepare('SELECT post_tags FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'])) {
+		if ($stmt = $sql->mysqli->prepare('SELECT post_tags FROM ' . $opt->ValueForKey("database/table_prefix") . $opt->ValueForKey("database/post_table"))) {
 			
 			$stmt->bind_result($ptags);
 			if ($stmt->execute()) {

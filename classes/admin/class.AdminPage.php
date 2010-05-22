@@ -9,14 +9,14 @@ class AdminPage {
 	
 	public function ConstructPage($contents, $contain=false) {
 		
-		require(dirname(__FILE__) . '/../../configuration.php');
+		$opt = new Options();
 
 $stuff = '<html>
 	<head>
 		<title>Admin</title>
-		<link rel="stylesheet" href="' . $nf['paths']['siteroot'] . 'admin/admin.css" />
+		<link rel="stylesheet" href="' . $opt->ValueForKey("paths/siteroot") . 'admin/admin.css" />
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-		<script type="text/javascript" src="' . $nf['paths']['siteroot'] . 'admin/admin.js"></script>
+		<script type="text/javascript" src="' . $opt->ValueForKey("paths/siteroot") . 'admin/admin.js"></script>
 	</head>
 	<body>
 		<div id="navigation">

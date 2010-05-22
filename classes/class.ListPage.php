@@ -10,14 +10,14 @@ class ListPage extends Page {
 	private $theme;
 	
 	public function ConstructContents() {
-		require(dirname(__FILE__) . '/../configuration.php');
-		require($nf['paths']['absolute'] . 'packages/packages.php');
+		$opt = new Options();
+		require($opt->ValueForKey("paths/absolute") . 'packages/packages.php');
 		
 		$pm = new PostManagement();
 		$pageNumber = $this->getPageData();
 		$post_data = $pm->GetPosts(null, $this->getPageData());
 		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
-		$PageConfig->variables->nf_page_title = $nf['blog']['title'];
+		$PageConfig->variables->nf_page_title = $opt->ValueForKey("blog/title");
 		
 		// render the page
 		if ($PageConfig->PostListStyle == 'condensed') {
@@ -29,7 +29,7 @@ class ListPage extends Page {
 				}
 			} else {
 				require(dirname(__FILE__) . '/../configuration.php');
-				$PageConfig->variables->nf_posts = $nf['error']['no_posts'];	
+				$PageConfig->variables->nf_posts = $opt->ValueForKey("error/no_posts");
 			}
 		}
 		

@@ -26,13 +26,13 @@ class AuthorPage extends Page {
 	}
 	
 	public function ConstructContents() {
-		require(dirname(__FILE__) . '/../configuration.php');
-		require($nf['paths']['absolute'] . 'packages/packages.php');
+		$opt = new Options();
+		require($opt->ValueForKey("paths/absolute") . 'packages/packages.php');
 		
 		$am = new AuthorManagement();
 		$posts = $am->GetCertainAuthor($this->GetAuthorID());
 		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
-		$PageConfig->variables->nf_page_title = 'Posts by ' . $posts[0]->first_name . ' ' . $posts[0]->last_name . ' - ' . $nf['blog']['title'];
+		$PageConfig->variables->nf_page_title = 'Posts by ' . $posts[0]->first_name . ' ' . $posts[0]->last_name . ' - ' . $opt->ValueForKey("blog/title");
 		$PageConfig->type = 'author';
 		
 		// render the page
@@ -44,8 +44,7 @@ class AuthorPage extends Page {
 					$PageConfig->variables->nf_posts .= $this->FormatPost($single_post, $PageConfig);
 				}
 			} else {
-				require(dirname(__FILE__) . '/../configuration.php');
-				$PageConfig->variables->nf_posts = $nf['error']['no_posts'];	
+				$PageConfig->variables->nf_posts = $opt->ValueForKey("error/no_posts");	
 			}
 		}
 		// $PageConfig->variables->nf_posts = $this->FormatPostListing($posts, $PageConfig);
@@ -57,9 +56,10 @@ class AuthorPage extends Page {
 			
 		$pf = new PackageFinder();
 		$pm = new PostManagement();
+		$opt = new Options();
 		
 		if ($pf->PackageEnabled('Gravatar') && !class_exists('Gravatar')) {
-			$gravatar_path = $nf['paths']['absolute'] . 'packages/pkg.Gravatar/Gravatar.php';
+			$gravatar_path = $opt->ValueForKey["paths/absolute"] . 'packages/pkg.Gravatar/Gravatar.php';
 			require($gravatar_path);
 		}
 		
@@ -78,7 +78,7 @@ class AuthorPage extends Page {
 		
 		// Assign author-related tags
 		$PageConfig->variables->nf_author_name =		$post->first_name . ' ' . $post->last_name;
-		$PageConfig->variables->nf_author_permalink =	$nf['paths']['siteroot'] . 'author.php?author=' . $post->id;
+		$PageConfig->variables->nf_author_permalink =	$opt->ValueForKey("paths/siteroot") . 'author.php?author=' . $post->id;
 		$PageConfig->variables->nf_author_email =		$post->email;
 		$PageConfig->variables->nf_author_bio =			$this->FormatMarkdown($post->bio);
 		$PageConfig->variables->nf_author_homepage =	$post->homepage;

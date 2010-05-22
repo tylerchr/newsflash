@@ -34,7 +34,8 @@ class PackageFinder {
 	
 	function __construct() {
 		require("configuration.php");
-		$this->packageDirectory = $nf['paths']['packages'];
+		$opt = new Options();
+		$this->packageDirectory = $opt->ValueForKey("paths/packages");
 		
 		$this->bannedPrefixes = array(".", ":"); // no UNIX hidden files or stupid Apple :2e files
 		$this->supportedFileFormats = array("css", "js");

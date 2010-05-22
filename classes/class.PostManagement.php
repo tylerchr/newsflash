@@ -13,10 +13,10 @@ class PostManagement {
 	
 	public function SavePost($post) {
 		
-		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
+		$opt = new Options();
 		
-		if ($stmt = $sql->mysqli->prepare('INSERT INTO ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' (post_type, post_title, post_slug, post_author, post_text, post_date, post_category, post_tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')) {
+		if ($stmt = $sql->mysqli->prepare('INSERT INTO ' . $opt->ValueForKey("database/table_prefix") . $opt->ValueForKey("database/post_table") . ' (post_type, post_title, post_slug, post_author, post_text, post_date, post_category, post_tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')) {
 			
 			$stmt->bind_param("sssssiss", $post->type, $post->title, $post->slug, $post->author, $post->text, $post->date, $post->category, $post->tags);
 			if ($stmt->execute()) {
@@ -34,10 +34,10 @@ class PostManagement {
 	
 	public function UpdatePost($post) {
 		
-		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
+		$opt = new Options();
 		
-		if ($stmt = $sql->mysqli->prepare('UPDATE ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' SET post_type=?, post_title=?, post_slug=?, post_author=?, post_text=?, post_date=?, post_category=?, post_tags=? WHERE post_id=?')) {
+		if ($stmt = $sql->mysqli->prepare('UPDATE ' . $opt->ValueForKey("database/table_prefix") . $opt->ValueForKey("database/post_table") . ' SET post_type=?, post_title=?, post_slug=?, post_author=?, post_text=?, post_date=?, post_category=?, post_tags=? WHERE post_id=?')) {
 			
 			$stmt->bind_param("sssssissi", $post->type, $post->title, $post->slug, $post->author, $post->text, $post->date, $post->category, $post->tags, $post->id);
 			if ($stmt->execute()) {
@@ -67,10 +67,10 @@ class PostManagement {
 		$pid = intval($post_id);
 		if ($this->DoesPostExist($pid)) {
 
-			require(dirname(__FILE__) . '/../configuration.php');
 			$sql = new mysql();
+			$opt = new Options();
 			
-			if ($stmt = $sql->mysqli->prepare('DELETE FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' WHERE post_id=?')) {
+			if ($stmt = $sql->mysqli->prepare('DELETE FROM ' . $opt->ValueForKey("database/table_prefix") . $opt->ValueForKey("database/post_table") . ' WHERE post_id=?')) {
 				
 				$stmt->bind_param("i", $pid);
 				if ($stmt->execute()) {
@@ -96,10 +96,10 @@ class PostManagement {
 	
 	public function DoesPostExist($post_id) {
 		
-		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
+		$opt = new Options();
 		
-		if ($stmt = $sql->mysqli->prepare('SELECT post_id FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' WHERE post_id = ?')) {
+		if ($stmt = $sql->mysqli->prepare('SELECT post_id FROM ' . $opt->ValueForKey("database/table_prefix") . $opt->ValueForKey("database/post_table") . ' WHERE post_id = ?')) {
 			
 			$stmt->bind_param("i", $post_id);
 			if ($stmt->execute()) {
@@ -165,10 +165,10 @@ class PostManagement {
 	
 	public function GetCategoryTotals() {
 		
-		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
+		$opt = new Options();
 		
-		if ($stmt = $sql->mysqli->prepare('SELECT post_id, post_category FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'])) {
+		if ($stmt = $sql->mysqli->prepare('SELECT post_id, post_category FROM ' . $opt->ValueForKey("database/table_prefix") . $opt->ValueForKey("database/post_table"))) {
 			
 			$stmt->bind_result($pid, $pcategory);
 			if ($stmt->execute()) {
@@ -196,10 +196,10 @@ class PostManagement {
 	
 	public function GetPostDates() {
 		
-		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
+		$opt = new Options();
 
-		if ($stmt = $sql->mysqli->prepare('SELECT post_date FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . ' ORDER BY post_date DESC')) {
+		if ($stmt = $sql->mysqli->prepare('SELECT post_date FROM ' . $opt->ValueForKey("database/table_prefix") . $opt->ValueForKey("database/post_table") . ' ORDER BY post_date DESC')) {
 			
 			$stmt->bind_result($pdate);
 			if ($stmt->execute()) {
@@ -278,7 +278,7 @@ class PostManagement {
 	
 	private function _GenerateQueryFromFilterAndPage($filter=array(), $page=0, $count=false) {
 		
-		require(dirname(__FILE__) . '/../configuration.php');
+		$opt = new Options();
 		
 		// generate the WHERE statement
 		if (count($filter) > 0) {
@@ -343,7 +343,7 @@ class PostManagement {
 			$limit_statement = " LIMIT " . $page['limit'] . " OFFSET " . $offset . " ";	
 		}
 		
-		$query = 'SELECT post_id, post_type, post_title, post_slug, post_author, post_text, post_link, post_image, post_date, post_category, post_tags FROM ' . $nf['database']['table_prefix'] . $nf['database']['post_table'] . $query_where . ' ORDER BY post_date DESC' . $limit_statement . ";";
+		$query = 'SELECT post_id, post_type, post_title, post_slug, post_author, post_text, post_link, post_image, post_date, post_category, post_tags FROM ' . $opt->ValueForKey("database/table_prefix") . $opt->ValueForKey("database/post_table") . $query_where . ' ORDER BY post_date DESC' . $limit_statement . ";";
 		
 		return array("query" => $query, "variable_types" => $whereVariableTypes, "variables" => $whereVariables);
 		
@@ -354,7 +354,6 @@ class PostManagement {
 		$index = strpos($metaquery['query'], " FROM");
 		$count_query = "SELECT COUNT(*) " . substr($metaquery['query'], $index);
 		
-		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
 		
 		if ($stmt = $sql->mysqli->prepare($count_query)) {
@@ -377,7 +376,6 @@ class PostManagement {
 	
 	public function GetPostsThroughFilter($filter=array(), $page=0) {
 		
-		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
 		
 		$metaquery = $this->_GenerateQueryFromFilterAndPage($filter, $page);

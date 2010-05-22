@@ -9,10 +9,10 @@ class PageManagement {
 	
 	public function GetPageList() {
 		
-		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
+		$opt = new Options();
 		
-		if ($stmt = $sql->mysqli->prepare('SELECT page_id, page_short_title, page_title, page_slug FROM ' . $nf['database']['table_prefix'] . $nf['database']['page_table'] . ' ORDER BY page_id ASC')) {
+		if ($stmt = $sql->mysqli->prepare('SELECT page_id, page_short_title, page_title, page_slug FROM ' . $opt->ValueForKey("database/table_prefix") . $opt->ValueForKey("database/page_table") . ' ORDER BY page_id ASC')) {
 			
 			$stmt->bind_result($pid, $pshorttitle, $ptitle, $pslug);
 			if ($stmt->execute()) {
@@ -40,10 +40,10 @@ class PageManagement {
 	
 	public function SavePage($page) {
 		
-		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
+		$opt = new Options();
 		
-		if ($stmt = $sql->mysqli->prepare('INSERT INTO ' . $nf['database']['table_prefix'] . $nf['database']['page_table'] . ' (page_short_title, page_title, page_slug, page_text, page_date) VALUES (?, ?, ?, ?, ?)')) {
+		if ($stmt = $sql->mysqli->prepare('INSERT INTO ' . $opt->ValueForKey("database/table_prefix") . $opt->ValueForKey("database/page_table") . ' (page_short_title, page_title, page_slug, page_text, page_date) VALUES (?, ?, ?, ?, ?)')) {
 			
 			$stmt->bind_param("sssssi", $page->short_title, $page->title, $page->slug, $page->text, $page->date);
 			if ($stmt->execute()) {
@@ -61,10 +61,10 @@ class PageManagement {
 	
 	public function GetPages() {
 		
-		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
+		$opt = new Options();
 		
-		if ($stmt = $sql->mysqli->prepare('SELECT page_id, page_short_title, page_title, page_slug, page_text, page_date FROM ' . $nf['database']['table_prefix'] . $nf['database']['page_table'] . ' ORDER BY page_date DESC')) {
+		if ($stmt = $sql->mysqli->prepare('SELECT page_id, page_short_title, page_title, page_slug, page_text, page_date FROM ' . $opt->ValueForKey("database/table_prefix") . $opt->ValueForKey("database/page_table") . ' ORDER BY page_date DESC')) {
 			
 			$stmt->bind_result($pid, $pshorttitle, $ptitle, $pslug, $ptext, $pdate);
 			if ($stmt->execute()) {
@@ -94,10 +94,10 @@ class PageManagement {
 	
 	public function GetCertainPage($pid) {
 		
-		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
+		$opt = new Options();
 		
-		if ($stmt = $sql->mysqli->prepare('SELECT page_id, page_short_title, page_title, page_slug, page_text, page_date FROM ' . $nf['database']['table_prefix'] . $nf['database']['page_table'] . ' WHERE page_id = ?')) {
+		if ($stmt = $sql->mysqli->prepare('SELECT page_id, page_short_title, page_title, page_slug, page_text, page_date FROM ' . $opt->ValueForKey("database/table_prefix") . $opt->ValueForKey("database/page_table") . ' WHERE page_id = ?')) {
 			
 			$stmt->bind_param("i", $pid);
 			$stmt->bind_result($pid, $pshorttitle, $ptitle, $pslug, $ptext, $pdate);
@@ -127,10 +127,10 @@ class PageManagement {
 		
 	public function GetPagesMatchingQuery($query) {
 		
-		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
+		$opt = new Options();
 
-		if ($stmt = $sql->mysqli->prepare('SELECT page_id, page_short_title, page_title, page_slug, page_text, page_date FROM ' . $nf['database']['table_prefix'] . $nf['database']['page_table'] . ' WHERE page_short_title LIKE CONCAT(\'%\', ?, \'%\') OR page_title LIKE CONCAT(\'%\', ?, \'%\') OR page_text LIKE CONCAT(\'%\', ?, \'%\') ORDER BY page_date DESC')) {
+		if ($stmt = $sql->mysqli->prepare('SELECT page_id, page_short_title, page_title, page_slug, page_text, page_date FROM ' . $opt->ValueForKey("database/table_prefix") . $opt->ValueForKey("database/page_table") . ' WHERE page_short_title LIKE CONCAT(\'%\', ?, \'%\') OR page_title LIKE CONCAT(\'%\', ?, \'%\') OR page_text LIKE CONCAT(\'%\', ?, \'%\') ORDER BY page_date DESC')) {
 			
 			
 			$stmt->bind_param("sss", $query, $query, $query);
@@ -162,10 +162,10 @@ class PageManagement {
 	
 	public function GetPageDates() {
 		
-		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
+		$opt = new Options();
 
-		if ($stmt = $sql->mysqli->prepare('SELECT page_date FROM ' . $nf['database']['table_prefix'] . $nf['database']['page_table'] . ' ORDER BY page_date DESC')) {
+		if ($stmt = $sql->mysqli->prepare('SELECT page_date FROM ' . $opt->ValueForKey("database/table_prefix") . $opt->ValueForKey("database/page_table") . ' ORDER BY page_date DESC')) {
 			
 			$stmt->bind_result($pdate);
 			if ($stmt->execute()) {

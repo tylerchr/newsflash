@@ -9,10 +9,10 @@ class CategoryManagement {
 	
 	public function GetAllCategories() {
 		
-		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
+		$opt = new Options();
 		
-		if ($stmt = $sql->mysqli->prepare('SELECT category_id, category_name FROM ' . $nf['database']['table_prefix'] . $nf['database']['category_table'])) {
+		if ($stmt = $sql->mysqli->prepare('SELECT category_id, category_name FROM ' . $opt->ValueForKey("database/table_prefix") . $opt->ValueForKey("database/category_table"))) {
 			
 			$stmt->bind_result($cid, $cname);
 			if ($stmt->execute()) {
@@ -38,10 +38,10 @@ class CategoryManagement {
 	
 	public function GetCategoryWithID($category_id) {
 		
-		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
+		$opt = new Options();
 		
-		if ($stmt = $sql->mysqli->prepare('SELECT category_id, category_name FROM ' . $nf['database']['table_prefix'] . $nf['database']['category_table'] . ' WHERE category_id=?')) {
+		if ($stmt = $sql->mysqli->prepare('SELECT category_id, category_name FROM ' . $opt->ValueForKey("database/table_prefix") . $opt->ValueForKey("database/category_table") . ' WHERE category_id=?')) {
 			
 			$stmt->bind_param("i", $category_id);
 			$stmt->bind_result($cid, $cname);
@@ -76,10 +76,10 @@ class CategoryManagement {
 	
 	public function CreateNewCategory($new_category) {
 		
-		require(dirname(__FILE__) . '/../configuration.php');
 		$sql = new mysql();
+		$opt = new Options();
 		
-		if ($stmt = $sql->mysqli->prepare('INSERT INTO ' . $nf['database']['table_prefix'] . $nf['database']['category_table'] . ' (category_name) VALUES (?)')) {
+		if ($stmt = $sql->mysqli->prepare('INSERT INTO ' . $opt->ValueForKey("database/table_prefix") . $opt->ValueForKey("database/category_table") . ' (category_name) VALUES (?)')) {
 			
 			$stmt->bind_param("s", $new_category->name);
 			if ($stmt->execute()) {

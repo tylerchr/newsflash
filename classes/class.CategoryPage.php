@@ -26,8 +26,8 @@ class CategoryPage extends Page {
 	}
 	
 	public function ConstructContents() {
-		require(dirname(__FILE__) . '/../configuration.php');
-		require($nf['paths']['absolute'] . 'packages/packages.php');
+		$opt = new Options();
+		require($opt->ValueForKey("paths/absolute") . 'packages/packages.php');
 		
 		$pm = new PostManagement();
 		$post_data = $pm->GetPostsFromCategory($this->GetCategoryID(), $this->getPageData());
@@ -39,7 +39,7 @@ class CategoryPage extends Page {
 		if (strlen($cname) == 0) {
 			$cname = 'Unfiled';	
 		}
-		$PageConfig->variables->nf_page_title = $cname . ' - ' . $nf['blog']['title'];
+		$PageConfig->variables->nf_page_title = $cname . ' - ' . $opt->ValueForKey("blog/title");
 		
 		// render the page
 		if ($PageConfig->PostListStyle == 'condensed') {
@@ -50,8 +50,7 @@ class CategoryPage extends Page {
 					$PageConfig->variables->nf_posts .= $this->FormatPost($single_post, $PageConfig);
 				}
 			} else {
-				require(dirname(__FILE__) . '/../configuration.php');
-				$PageConfig->variables->nf_posts = $nf['error']['no_posts'];	
+				$PageConfig->variables->nf_posts = $opt->ValueForKey("error/no_posts");	
 			}
 		}
 		
