@@ -126,7 +126,7 @@ class Page {
 		$PageConfig->variables->nf_blog_title =		$blog_title;
 		$PageConfig->variables->nf_blog_subtitle =	$blog_subtitle;
 		$PageConfig->variables->nf_site_root =		'../../';
-		$PageConfig->variables->nf_rss_link =		$this->_get_rss_link();
+		$PageConfig->variables->nf_feed_link =		$this->_get_feed_link();
 		
 		$PageConfig->variables->nf_category_list =	$this->GetCategoryList();
 		$PageConfig->variables->nf_tag_list =		$this->GetTagList();
@@ -239,12 +239,7 @@ class Page {
 		// Markdown-format the text if Markdown is available, otherwise return the input text
 		$pf = new Packages();
 		$opt = new Options();
-		if ($pf->PackageEnabled('markdown') && !function_exists('Markdown')) {
-			$markdown_path = $opt->ValueForKey("paths/absolute") . 'packages/pkg.markdown/markdown.php';
-			require($markdown_path);
-		}
-		
-		if (function_exists('Markdown')) {
+		if ($pf->ImportPackage('Markdown')) {
 			$post_text = Markdown($input);
 		} else {
 			$post_text = $input;
@@ -338,16 +333,21 @@ class Page {
 	//
 	
 	// get the <link> element for RSS autodiscovery, if it's available and enabled
-	private function _get_rss_link() {
+	private function _get_feed_link() {
 		
-		$opt = new Options();	
-		if ($opt->ValueForKey("rss/enabled") == "true") {
-			if (!is_null($opt->ValueForKey("rss/url")))
-				$link = $opt->ValueForKey("rss/url");
+		$pf = new Packages();
+		$opt = new Options();
+		if ($pf->ImportPackage('FeedWriter') && $opt->ValueForKey("feed/enabled") == "true") {
+			if (!is_null($opt->ValueForKey("feed/url")))
+				$link = $opt->ValueForKey("feed/url");
 				
 			$link = $opt->ValueForKey('paths/siteroot') . 'feed.php';
-
-			return "<link rel=\"alternate\" type=\"application/rss+xml\" href=\"" . $link . "\">";
+			
+			// rss
+			// return "<link rel=\"alternate\" type=\"application/rss+xml\" href=\"" . $link . "\">";
+			
+			// atom
+			return "<link rel=\"alternate\" type=\"application/atom+xml\" title=\"" . $opt->ValueForKey("blog/title") . "\" href=\"" . $link . "\" />";
 		}
 		
 		return false;

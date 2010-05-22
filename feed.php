@@ -2,83 +2,121 @@
 
 require('classes/classes.php');
 
-function FormatMarkdown($input) {	
-	// Markdown-format the text if Markdown is available, otherwise return the input text
-	$pf = new Packages();
-	$opt = new Options();
-	if ($pf->PackageEnabled('markdown') && !function_exists('Markdown')) {
-		$markdown_path = $opt->ValueForKey("paths/absolute") . 'packages/pkg.markdown/markdown.php';
-		require($pf->ScriptForPackage('markdown'));
+class Feed {
+	
+	public function __construct() {
+		// nothing
 	}
 	
-	if (function_exists('Markdown')) {
-		$post_text = Markdown($input);
-	} else {
-		$post_text = $input;
+	public function __toString() {
+		$feed = $this->_generate_feed();
+		if (is_string($feed)) {
+			return $feed;	
+		} else {
+			return "";	
+		}
 	}
 	
-	return $post_text;
-}
+	//
+	// private methods
+	//
+	
+	private function _generate_feed() {
+		
+		$opt = new Options();
+		$pf = new Packages();
+		if ($pf->ImportPackage('FeedWriter')) {
 
-function FormatTimestamp($timestamp) {
-	return date("D, d M Y H:i:s T", $timestamp);	
-}
-
-$opt = new Options();
-
-// get the posts
-$pm = new PostManagement();
-$posts = $pm->GetRecentPosts();
-foreach ($posts['posts'] as $post) {
-	$new_posts[] = $post;
-	if ($post->type == "link") {
-		$link = $post->link;
-	} else {
-		$link = $opt->ValueForKey("paths/siteroot") . "post.php?post=" . $post->id;
+			//Creating an instance of FeedWriter class. 
+			//The constant ATOM is passed to mention the version
+			
+			if ($opt->ContainsKey('feed/format')) {	
+				$format = $opt->ValueForKey('feed/format');
+			} else {
+				$format = "atom";
+			}
+			
+			if ($format == "rss") {
+				$feed = new FeedWriter(RSS2);
+				$date_format = DATE_RSS;
+			} else {
+				$feed = new FeedWriter(ATOM);
+				$date_format = DATE_ATOM;
+			}
+		
+			//Setting the channel elements
+			//Use wrapper functions for common elements
+			$feed->setTitle($opt->ValueForKey("blog/title"));
+			$feed->setLink($opt->ValueForKey("paths/siteroot"));
+			
+			//For other channel elements, use setChannelElement() function
+			$feed->setChannelElement('updated', date($date_format , time()));
+			$feed->setChannelElement('author', array('name'=>'Tyler Christensen'));
+					
+			//Adding a feed. Genarally this protion will be in a loop and add all feeds.
+			$pm = new PostManagement();
+			$posts = $pm->GetRecentPosts();
+			foreach ($posts['posts'] as $post) {
+				
+				if ($post->type == "link") {
+					$link = $post->link;
+				} else {
+					$link = $opt->ValueForKey("paths/siteroot") . "post.php?post=" . $post->id;
+				}
+		
+				//Create an empty FeedItem
+				$newItem = $feed->createNewItem();
+				
+				//Add elements to the feed item
+				//Use wrapper functions to add common feed elements
+				$newItem->setTitle($post->title);
+				$newItem->setLink($link);
+				$newItem->addElement("published", date($date_format, $post->date));
+				$newItem->setDate($post->date);
+				//Internally changed to "summary" tag for ATOM feed
+				$text = $this->_clean_string($this->_format_markdown($post->text));
+				$newItem->setDescription($text);
+							
+				//Now add the feed item	
+				$feed->addItem($newItem);
+				
+			}
+			
+			return $feed->genarateFeed();	
+		}	
 	}
-	$rss_items[] = new phparess_item(array(
-		"title" => $post->title,
-		"link" => $link,
-		"description" => FormatMarkdown($post->text),
-		"pubDate" => FormatTimestamp($post->date)
-	));
+	
+	private function _clean_string($string) {
+ 
+    return str_replace(array(
+			chr(145), 
+			chr(146), 
+			chr(147), 
+			chr(148), 
+			chr(151)
+		),
+		array(
+			"'", 
+		    "'", 
+		    '"', 
+		    '"', 
+		    '-'
+		), $string);
+	
+	}
+
+	private function _format_markdown($input) {	
+		// Markdown-format the text if Markdown is available, otherwise return the input text
+		$pf = new Packages();
+		if ($pf->ImportPackage('Markdown')) {
+			return Markdown($input);
+		}
+		return $input;
+	}
+	
 }
 
-// create a channel
-$channel = new phparess_channel(array(
-	"title" => $opt->ValueForKey("blog/title"),
-	"link" => $opt->ValueForKey("paths/siteroot"),
-	"description" => $opt->ValueForKey("blog/subtitle"),
-));
-$channel->addItems($rss_items);
-
-// create a phparess feed, and display it
-$rss = new phparess();
-$rss->setChannel($channel);
-header('Content-type: text/plain');
-//header('Content-type: application/rss+xml');
-echo $rss;
-
-/*
-
-// display the content
-header('Content-type: text/plain');
-
-// create a channel
-$channel = new phparess_channel(array(
-	"title"=>"phparess test feed",
-	"link"=>"http://github.com/tylerchr/phparess",
-	"description"=>"A set of PHP classes for writing basic RSS feeds"
-));
-$channel->addItems($items);
-
-// create a phparess feed, and display it
-$rss = new phparess();
-$rss->setChannel($channel);
-
-header('Content-type: application/rss+xml');
-echo $rss;
-
-*/
+$feed = new Feed();
+echo $feed;
 
 ?>

@@ -53,26 +53,27 @@ class AuthorPage extends Page {
 	
 	public function FormatPost($post, $PageConfig) {
 			
-		$pf = new Packages();
 		$pm = new PostManagement();
 		$opt = new Options();
 		
-		if ($pf->PackageEnabled('Gravatar') && !class_exists('Gravatar')) {
-			$gravatar_path = $opt->ValueForKey["paths/absolute"] . 'packages/pkg.Gravatar/Gravatar.php';
-			require($pf->ScriptForPackage('Gravatar'));
+		// use default avatar image		
+		if (rand(0,1) == 0) {
+			$gravatar = 'themes/theme.default/images/default-avatar-female.png';	
+		} else {
+			$gravatar = 'themes/theme.default/images/default-avatar-male.png';
 		}
 		
-		// Get Gravatar	
-		$grv = new Gravatar($post->email);
-		if ($grv->GravatarExists()) {
-			$grv->setSize(128);
-			$gravatar = $grv;	
-		} else {
-			if (rand(0,1) == 0) {
-				$gravatar = 'themes/theme.default/images/default-avatar-female.png';	
-			} else {
-				$gravatar = 'themes/theme.default/images/default-avatar-male.png';
+		// attempt to get Gravatar
+		$pf = new Packages();
+		if ($pf->ImportPackage('Gravatar')) {
+		
+			// Get Gravatar	
+			$grv = new Gravatar($post->email);
+			if ($grv->GravatarExists()) {
+				$grv->setSize(128);
+				$gravatar = $grv;	
 			}
+		
 		}
 		
 		// Assign author-related tags

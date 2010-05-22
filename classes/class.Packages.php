@@ -46,6 +46,21 @@ class Packages {
 		$this->SortPackages();
 	}
 	
+	public function ImportPackage($package) {
+		
+		if ($this->PackageEnabled($package) && (!class_exists($package) && !function_exists($package))) {
+			$path = $this->ScriptForPackage($package);
+			require_once($path);
+		}
+			
+		if (class_exists($package) || function_exists($package)) {
+			return true;
+		}
+		
+		return false;	
+			
+	}
+	
 	public function ScriptForPackage($package) {
 		$opt = new Options();
 		$path = $opt->ValueForKey("paths/absolute") . 'packages/pkg.' . $package . '/' . $package . '.php';	
@@ -70,6 +85,7 @@ class Packages {
 	}
 	
 	public function PackageEnabled($pkg) {
+		
 		// Checks to see if the given package is enabled
 		if (in_array('pkg.' . $pkg, $this->basicPackages) || in_array('pkg.' . $pkg, $this->knottyPackages)) {
 			return true;
