@@ -27,7 +27,6 @@ class TagPage extends Page {
 	
 	public function ConstructContents() {
 		$opt = new Options();
-		require($opt->ValueForKey("paths/absolute") . 'packages/packages.php');
 		
 		$pm = new PostManagement();
 		$post_data = $pm->GetPostsTaggedWith($this->GetTag(), $this->getPageData());

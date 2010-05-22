@@ -127,6 +127,14 @@ class PostManagement {
 		return $this->ReturnPosts(null, $page);
 	}
 	
+	public function GetRecentPosts($limit=25) {
+		$page = array(
+			"page" => 1,
+			"limit" => $limit
+		);
+		return $this->ReturnPosts($null, $page);
+	}
+	
 	public function GetPostsFromCategory($category_id, $page=0) {
 		$filters['post_category'] = $category_id>0 ? $category_id : NULL;;
 		return $this->ReturnPosts($filters, $page);	

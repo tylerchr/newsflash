@@ -2,6 +2,7 @@
 	<head>
 		<title><?php echo $tags->nf_page_title; ?></title>
 		<link rel="stylesheet" href="themes/theme.default/styles.css" type="text/css" />
+		<?php echo $tags->nf_rss_link; ?>
 		<?php echo $tags->nf_headscape; ?>
 	</head>
 	<body>

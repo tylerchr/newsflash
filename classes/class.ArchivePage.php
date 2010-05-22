@@ -76,7 +76,6 @@ class ArchivePage extends Page {
 	public function ConstructContents() {
 		require(dirname(__FILE__) . '/../configuration.php');
 		$opt = new Options();
-		require($opt->ValueForKey("paths/absolute") . 'packages/packages.php');
 		
 		$pm = new PostManagement();
 		$post_data = $pm->GetPostsFrom($this->GetYear(), $this->GetMonth(), $this->GetDay(), $this->getPageData());

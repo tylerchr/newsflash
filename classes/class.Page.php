@@ -126,6 +126,8 @@ class Page {
 		$PageConfig->variables->nf_blog_title =		$blog_title;
 		$PageConfig->variables->nf_blog_subtitle =	$blog_subtitle;
 		$PageConfig->variables->nf_site_root =		'../../';
+		$PageConfig->variables->nf_rss_link =		$this->_get_rss_link();
+		
 		$PageConfig->variables->nf_category_list =	$this->GetCategoryList();
 		$PageConfig->variables->nf_tag_list =		$this->GetTagList();
 		$PageConfig->variables->nf_archive_list =	$this->GetArchivesList();
@@ -235,7 +237,7 @@ class Page {
 		require(dirname(__FILE__) . '/../configuration.php');
 		
 		// Markdown-format the text if Markdown is available, otherwise return the input text
-		$pf = new PackageFinder();
+		$pf = new Packages();
 		$opt = new Options();
 		if ($pf->PackageEnabled('markdown') && !function_exists('Markdown')) {
 			$markdown_path = $opt->ValueForKey("paths/absolute") . 'packages/pkg.markdown/markdown.php';
@@ -329,6 +331,26 @@ class Page {
 		</form>';
 		
 		return $bar;	
+	}
+	
+	//
+	// private methods
+	//
+	
+	// get the <link> element for RSS autodiscovery, if it's available and enabled
+	private function _get_rss_link() {
+		
+		$opt = new Options();	
+		if ($opt->ValueForKey("rss/enabled") == "true") {
+			if (!is_null($opt->ValueForKey("rss/url")))
+				$link = $opt->ValueForKey("rss/url");
+				
+			$link = $opt->ValueForKey('paths/siteroot') . 'feed.php';
+
+			return "<link rel=\"alternate\" type=\"application/rss+xml\" href=\"" . $link . "\">";
+		}
+		
+		return false;
 	}
 		
 }

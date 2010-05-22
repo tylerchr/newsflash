@@ -27,7 +27,6 @@ class AuthorPage extends Page {
 	
 	public function ConstructContents() {
 		$opt = new Options();
-		require($opt->ValueForKey("paths/absolute") . 'packages/packages.php');
 		
 		$am = new AuthorManagement();
 		$posts = $am->GetCertainAuthor($this->GetAuthorID());
@@ -54,13 +53,13 @@ class AuthorPage extends Page {
 	
 	public function FormatPost($post, $PageConfig) {
 			
-		$pf = new PackageFinder();
+		$pf = new Packages();
 		$pm = new PostManagement();
 		$opt = new Options();
 		
 		if ($pf->PackageEnabled('Gravatar') && !class_exists('Gravatar')) {
 			$gravatar_path = $opt->ValueForKey["paths/absolute"] . 'packages/pkg.Gravatar/Gravatar.php';
-			require($gravatar_path);
+			require($pf->ScriptForPackage('Gravatar'));
 		}
 		
 		// Get Gravatar	

@@ -2,7 +2,7 @@
 
 /* packages.php */
 
-class PackageFinder {
+class Packages {
 	
 	/*	- - - - -
 		PUBLIC PACKAGE LISTINGS
@@ -44,6 +44,16 @@ class PackageFinder {
 		
 		$this->GetEnabledPackages();
 		$this->SortPackages();
+	}
+	
+	public function ScriptForPackage($package) {
+		$opt = new Options();
+		$path = $opt->ValueForKey("paths/absolute") . 'packages/pkg.' . $package . '/' . $package . '.php';	
+		if (file_exists($path)) {
+			return $path;
+		}
+		
+		return false;
 	}
 	
 	public function GetEnabledPackages() {

@@ -28,7 +28,6 @@ class LiteralPage extends Page {
 	public function ConstructContents() {
 		
 		$opt = new Options();
-		require($opt->ValueForKey("paths/absolute") . 'packages/packages.php');
 		
 		$pam = new PageManagement();
 		$posts = $pam->GetCertainPage($this->GetPageID());

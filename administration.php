@@ -20,7 +20,7 @@ if ($_SESSION['auth_loggedin'] == true) {
 		$pm = new PostManagement();
 		$posts = $pm->GetPosts();
 		
-		foreach ($posts as $post) {
+		foreach ($posts['posts'] as $post) {
 			$comments = rand(0,5);
 			if ($comments > 0) {
 				$comment_code = '<span>' . $comments . ' comments</span>';
@@ -70,9 +70,10 @@ if ($_SESSION['auth_loggedin'] == true) {
 		if ($post > 0) {
 			$edit = $pm->GetCertainPost($post);
 		}
+		$post_data = $edit['posts'][$post];
 		
-		if (strlen($edit[0]->title) > 0) {
-			$display_title = $edit[0]->title;	
+		if (strlen($post_data->title) > 0) {
+			$display_title = $post_data->title;	
 		} else {
 			$display_title = '[ Click to type title ]';
 		}
@@ -92,11 +93,11 @@ if ($_SESSION['auth_loggedin'] == true) {
 					<li><a href="#">Page</a></li>
 				</ul>
 			</div>
-			<input type="hidden" id="post-id" name="id" value="' . $edit[0]->id . '" />
-			<input type="hidden" id="post-type" name="type" value="' . $edit[0]->type . '" />
-			<span class="data-container" id="post-link"><h3 class="caption">Link URL</h3><input type="text" name="link" id="post-link" value="' . $edit[0]->link . '" /></span>
-			<span class="data-container" id="post-image"><h3 class="caption">Image URL</h3><input type="text" name="image" id="post-image" value="' . $edit[0]->image . '" /></span>
-			<span class="data-container" id="post-text"><textarea id="new-post" name="text">' . $edit[0]->text . '</textarea></span>
+			<input type="hidden" id="post-id" name="id" value="' . $post_data->id . '" />
+			<input type="hidden" id="post-type" name="type" value="' . $post_data->type . '" />
+			<span class="data-container" id="post-link"><h3 class="caption">Link URL</h3><input type="text" name="link" id="post-link" value="' . $post_data->link . '" /></span>
+			<span class="data-container" id="post-image"><h3 class="caption">Image URL</h3><input type="text" name="image" id="post-image" value="' . $post_data->image . '" /></span>
+			<span class="data-container" id="post-text"><textarea id="new-post" name="text">' . $post_data->text . '</textarea></span>
 			<div id="edit-post-button-bar">
 				<a href="administration.php?posts" class="visible-button">Cancel</a>
 				<input type="submit" class="visible-button" value="Save this post" />

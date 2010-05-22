@@ -29,7 +29,6 @@ class SearchPage extends Page {
 		require(dirname(__FILE__) . '/../configuration.php');
 		
 		$opt = new Options();
-		require($opt->ValueForKey("paths/absolute") . 'packages/packages.php');
 		
 		$pm = new PostManagement();
 		$post_data = $pm->GetPostsMatchingQuery($this->GetQuery(), $this->getPageData());
