@@ -6,76 +6,181 @@ body {
 	font-size: 12px;
 }
 
-.container {
-	text-align: left;
+/*
+ *	UNIVERSAL
+ *	(layout)	
+ *
+ */
+
+section.ninesixty {
+	width: 960px;
 	margin-left: auto;
 	margin-right: auto;
-	width: 960px;
+	text-align: left;
+	
+	position: relative;
 }
 
-.frame {
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	border: 1px solid #efefef;
-	background-color: #fff;
-	padding: 10px;
-}
+/*
+ *	HEADER
+ *	(layout)	
+ *
+ */
 
-#navigation {
+header {
 	color: #888;
 	background-color: #2f2f2f;
 	background: -webkit-gradient(linear, left top, left bottom, from(#444), to(#343434), color-stop(0.5, #3c3c3c), color-stop(0.5, #2f2f2f));
 	background: -moz-linear-gradient(top, #444, #3c3c3c 50%, #2f2f2f 50%, #343434);
-	border-bottom: 2px solid black;
+	
+	background: -webkit-gradient(linear, left top, left bottom, from(#f9f9f9), to(#eee));
+	
+	border-bottom: 2px solid #ddd;
+	
+	height: 115px;
 }
 
-ul.linkbar {
-	list-style-type: none;
-	margin: 0;
-	padding: 3px;
-}
-
-ul.linkbar li {
-	display: inline-block;
+header h1 {
+	position: absolute;
+	top: 50px;
+	left: 20px;
 	margin: 0;
 	padding: 0;
+	
+	color: #000;
+	font-size: 20px;
 }
 
-ul.linkbar li a {
+header h1 a {
 	display: block;
-	padding: 7px;	
+	color: #000;	
 	text-decoration: none;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	color: white;
 }
 
-ul.linkbar li a.subtle-link {
-	color: #888;
-	display: inline;	
-}
-
-ul.linkbar li a.subtle-link:hover {
-	color: #aaa;
-	background: none;
+header h1 a:hover {
 	text-decoration: underline;
 }
 
-ul.link-button-bar li.menu-right {
-	float: right;
+header h2 {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+	
+	color: #bbb;
+	text-decoration: none;
+	font-size: 10px;
+	
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
 }
 
-ul.link-button-bar li a:hover {
-	background-color: #FBB917;
-	background: -webkit-gradient(linear, left top, left bottom, from(#FBB917), to(#C68E17));
-	background: -moz-linear-gradient(top, #FBB917, #C68E17);
+header section nav {
+	
+	position: absolute;
+	top: 0;
+	right: 0px;
+	
+	display: inline;
 }
 
-ul.link-button-bar li a:active {
-	background-color: #C68E17;
-	background: -webkit-gradient(linear, left top, left bottom, from(#C68E17), to(#FBB917));
-	background: -moz-linear-gradient(top, #C68E17, #FBB917);
+header nav ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	display: inline-block;
+	
+	-webkit-border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	border: 1px solid #ddd;
+	border-bottom: 1px solid #ccc;
+	border-top: 0;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f9f9f9), to(#e4e4e4));
+	
+	margin-right: 15px;
+	letter-spacing: -0.1em;
+	
+	z-index: 5;
 }
+
+header nav ul li {
+	display: inline-block;
+	color: #58c;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	
+	position: relative;
+}
+
+header nav ul li img {
+	position: absolute;
+	top: 8px;
+	left: 6px;
+	height: 16px;
+	width: 16px;
+	border: 1px solid white;
+}
+
+header nav ul li.my-name a {
+	color: black;
+	padding-left: 28px;	
+}
+
+header nav ul li a {
+	display: block;
+	color: inherit;	
+	text-decoration: none;
+	padding: 10px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	font-weight: bold;
+	
+	text-shadow: #fff 0 1px 1px;
+	
+	border-right: 1px solid #ddd;
+}
+
+header nav ul li:last-child a {
+	border-right: 0;
+}
+
+header nav ul li a:hover {
+	text-decoration: underline;	
+}
+
+/*
+ *	QUICK LINKS
+ */
+ 
+header nav ul.quicklinks {
+	border: 1px solid #d8d8dd;
+	border-bottom: 1px solid #c7c7cc;
+	border-top: 0;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f4f4f9), to(#dddde4));
+	
+	z-index: 10;
+}
+
+header nav ul.quicklinks li.more {
+	display: none;
+}
+
+header nav ul.quicklinks li a {
+	border-right: 1px solid #d8d8dd;
+}
+
+header nav ul.quicklinks li a#quicklinks-more:hover ul {
+	border: 1px solid blue;
+}
+
+header nav ul.quicklinks li:last-child a {
+	border-right: 0;	
+}
+
+/*
+ *
+ *	UI ELEMENTS
+ *
+ */
 
 .visible-button {
 	border: 0;
@@ -91,6 +196,7 @@ ul.link-button-bar li a:active {
 	background-color: #FBB917;
 	background: -webkit-gradient(linear, left top, left bottom, from(#FBB917), to(#c99118));
 	background: -moz-linear-gradient(top, #FBB917, #c99118);
+	border: 1px solid #e2a518;
 	
 	/*	
 	background-color: #FBB917;
@@ -105,42 +211,127 @@ ul.link-button-bar li a:active {
 	cursor: pointer;
 }
 
+.visible-button:hover {
+	border: 1px solid #c99118;
+}
+
 .visible-button:active {
 	background-color: #C68E17;
 	background: -webkit-gradient(linear, left top, left bottom, from(#C68E17), to(#FBB917));
 	background: -moz-linear-gradient(top, #C68E17, #FBB917);
 }
 
-#admin-body {
-	padding-top: 20px;
+/*
+ *	MAIN BODY
+ *	(layout)
+ *
+ */
+
+section.adminbody {
+	
 	padding-bottom: 20px;
+	margin-top: -30px;
+	margin-bottom: 20px;
+	
+	background: url(fadebg.png) top left no-repeat;
+}
+
+section.adminbody h3 {
+	margin: 8px;
+	padding: 20px;
+	
+	margin-bottom: 0;
+	padding-bottom: 0;
+	
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: #bbb;
+}
+
+section.adminbody section.frame {
+	display: inline-block;
+	padding: 20px;
+	padding-top: 0px;
+	width: 920px;
 	clear: both;
 	overflow:hidden;
 	
-	background-color: #f8f8f8;
-	background: -webkit-gradient(linear, left top, left bottom, from(white), to(#f0f0f0));
-	background: -moz-linear-gradient(top, white, #f0f0f0);
+	background:transparent;
+	border: 0;
 }
 
-#admin-body h1 {
-	margin: -10px;
-	margin-bottom: 20px;
-	padding: 10px;
+section.adminbody section.frame ul.sidebar {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;	
 	
-	display: block;
-	color: white;
-	font-size: 1.5em;
+	width: 160px;
 	
-	background-color: #2f2f2f;
-	background: -webkit-gradient(linear, left top, left bottom, from(#444), to(#343434), color-stop(0.5, #3c3c3c), color-stop(0.5, #2f2f2f));		background: -moz-linear-gradient(top, #444, #3c3c3c 50%, #2f2f2f 50%, #343434);
+	padding: 5px;
+	margin-top: 20px;
 	
-	-webkit-border-radius: 5px;
-	-webkit-border-top-left-radius: 10px;
-	-webkit-border-top-right-radius: 10px;	
+	min-height: 240px;
+	border-right: 1px solid #eee;
+	margin-right: 20px;
 	
-	-moz-border-radius: 5px;
-	-moz-border-radius-topleft: 10px;
-	-moz-border-radius-topright: 10px;	
+	float:left;
+}
+
+section.adminbody section.frame ul.sidebar li {
+	margin-bottom: 10px;
+}
+
+section.adminbody section.frame ul.sidebar li a,
+section.adminbody section.frame ul.sidebar li a span.text {
+	font-weight: bold;
+	letter-spacing: -0.1em;
+	color: #88d;
+	text-decoration: none;	
+}
+
+section.adminbody section.frame ul.sidebar a span.text {
+	display: inline-block;
+	width: 110px;
+	overflow: hidden;
+}
+
+section.adminbody section.frame ul.sidebar a span.number {
+	font-weight: normal;
+	letter-spacing: 0em;
+	display: inline-block;
+	width: 24px;
+	text-align: center;
+	overflow: hidden;
+}
+
+section.adminbody section.frame ul.sidebar a:hover span.text {
+	text-decoration: underline;	
+}
+
+section.adminbody section.frame ul.sidebar a:hover span.number {
+	background-color: #666;
+	color: #fff;
+}
+
+section.adminbody section.frame ul.sidebar span.number {
+	background-color: #eee;
+	color: #333;
+	padding: 1px;
+	padding-left: 5px;
+	padding-right: 5px;	
+	-webkit-border-radius: 8px;
+}
+
+section.adminbody section.frame section.content {	
+	display: inline-block;
+	clear:both;
+	overflow:hidden;
+	
+	margin-top: 10px;
+}
+
+section.adminbody section.frame section.sidebar {
+	width: 720px;
 }
 
 #admin-body p {
@@ -182,11 +373,11 @@ ul.link-button-bar li a:active {
 
 .home-thumb {
 	float: left;
-	width: 430px;	
+	width: 320px;	
 	border: 2px solid #efefef;
 	background-color: #fff;
 	padding: 10px;
-	margin: 10px;
+	margin: 8px;
 	
 	-webkit-border-radius: 10px;
 	-moz-border-radius: 10px;
@@ -215,22 +406,24 @@ ul.link-button-bar li a:active {
 	-moz-border-radius-topright: 10px;
 }
 
-#footer {
+footer {
 	color: #999;
 	text-align: center;
-	
-	border-top: 1px solid #eee;
-	padding-top: 30px;
 	
 	padding-bottom: 30px;
 }
 
-#footer a {
+footer section {
+	padding-top: 10px;
+	border-top: 1px solid #ddd;
+}
+
+footer a {
 	color: #333;
 	text-decoration: none;
 }
 
-#footer a:hover {
+footer a:hover {
 	color: #E8A317;
 	text-decoration: underline;
 }
@@ -343,88 +536,42 @@ ul.link-button-bar li a:active {
  * New Post 
  */
  
-#new-post-header {
-	width: 980px;
-	margin: -10px;
-	margin-top: -20px;
-	margin-left: -50px;
-	background-color: #c8c8c8;
-	background: -webkit-gradient(linear, left top, left bottom, from(#aaa), to(#fff));
-	background: -moz-linear-gradient(top, #aaa, #fff);
-	
-	padding-top: 10px;
-	margin-bottom: 20px;
-}
-
-form#new-post-form #post-title-view {
+form#new-post-form {
 	display: block;
 	margin: 0;
 	padding: 0;
 	
-	margin-top: 10px;
-	margin-left: 40px;
-	margin-right: 40px;
-}
-
-form#new-post-form #post-title-view .click-edit-text {
-	color: #bbb;	
-	font-weight: normal;
-	margin-left: 100px;
-	display: inline;
-	
-	padding: 0;
-	margin: 0;
-}
-
-form#new-post-form #post-title-view:hover .click-edit-text {
-	display: inline;	
-}
-
-form#new-post-form #post-title-view h2 {
-	padding: 0px;
-	margin: 0;
-	height: 36px;
-	line-height: 36px;
-	vertical-align: middle;
-	
-	width: 600px;
-	
-	font-size: 18px;
-}
-
-form#new-post-form #post-title-view h2:hover {
-	background-color: #FFF8E0;
+	margin-top: 15px;
 }
 
 form#new-post-form #post-title {
 	display: block;
 	margin: 0;
-	padding: 0;	
-	
-	margin-top: 10px;
-	margin-left: 40px;
-	margin-right: 40px;
-}
- 
-form#new-post-form #post-title input {
-	margin: 0;
 	padding: 0;
-	height: 36px;
-	width: 600px;
-	
-	font-size: 14px;
 }
  
 #new-post-type {
+	position: absolute;
+	top: 20px;
+	right: 80px;
+	
+	display: inline-block;
 	list-style-type: none;
 	padding: 0;
-	border-bottom: 1px solid #aaa;
 	margin-bottom: 20px;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f9f9f9), to(#e4e4e4));
+	-webkit-border-radius: 5px;
+	border: 1px solid #ddd;
+	border-bottom: 1px solid #bbb;
 }
 
-#new-post-type li:first-child {
-	font-weight: bold;
-	margin-right: 10px;	
+#new-post-type li {
+	padding-right: 5px;
+	border-right: 1px solid #ccc;	
+}
+
+#new-post-type li:last-child {
+	border-right: 0;
 }
 
 #new-post-type li {
@@ -432,67 +579,43 @@ form#new-post-form #post-title input {
 }
 
 #new-post-type li:first-child {
-	margin-left: 50px;
-}
-
-#new-post-type li.tab-selected a {
-	border-top: 3px solid #FFA500;
-	background-color: #ddd;
-	color: #000;
-	font-weight: bold;
-	
-	background-color: #eee;
-	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ddd));
-	background: -moz-linear-gradient(top, #fff, #ddd);
-}
-
-#new-post-type li.tab-selected a:hover {
-	border-top-color: #ffa500;	
+	margin-left: 5px;
 }
 
 #new-post-type li a {
 	display: inline-block;
-	padding: 10px;
-	padding-left: 15px;
-	padding-right: 15px;
-	
+	padding: 5px;
+	padding-top: 8px;
+	padding-bottom: 8px;
 	text-decoration: none;
-	color: black;
-	
-	border: 1px solid #aaa;
-	border-top-width: 3px;
-	border-bottom: 0;
+	color: #888;
 }
 
-#new-post-type li:hover a {
-	border-top: 3px solid #EEDD82;
-	color: black;	
-}
-
-form#new-post-form {
-	margin-left: 40px;
-	width: 880px;	
+#new-post-type li.tab-selected a {	
+	font-weight: bold;
+	color: #000;
 }
 
 form#new-post-form .data-container {
 	display: block;	
 }
 
-form#new-post-form h3.caption {
-	font-size: 1.2em;
+form#new-post-form h4.caption {
+	letter-spacing: -0.1em;
+	font-size: 1.0em;
 	display: inline-block;
 	margin: 0;
 	padding: 0;
 	margin-right: 20px;
 	
-	width: 96px;
+	width: 64px;
 }
 
 form#new-post-form input[type="text"] {
 	display: inline-block;
 	padding: 10px;
 	font-size: 1.2em;
-	width: 440px;
+	width: 400px;
 	margin-bottom: 20px;	
 	
 	border: 1px solid #ccc;
@@ -501,12 +624,19 @@ form#new-post-form input[type="text"] {
 }
  
 textarea#new-post {
-	width: 880px;
-	height: 240px;
+	width: 910px;
+	height: 320px;
 	
 	border: 1px solid #ccc;
 	background: -webkit-gradient(linear, left top, left bottom, from(#fbfbfb), to(#fff));
 	background: -moz-linear-gradient(top, #fbfbfb, #fff);
+}
+
+#markdownpreview {
+	margin-top: 30px;
+	width: 910px;
+	border: 1px solid #eee;
+	padding: 5px;
 }
 
 form#new-post-form #edit-post-button-bar {

@@ -4,24 +4,13 @@ $(document).ready(function() {
 		return (obj.textContent || obj.innerText || jQuery(obj).text() || '').toLowerCase().indexOf(meta[3].toLowerCase()) >= 0;
 	};
 	
-	$("#post-title").hide();
-	
-	$("#post-title-view h2").click(function() {
-		$("#post-title").show();
-		$("#post-title input").focus();
-		$("#post-title-view").hide();
+	/* "More" in navigation */
+	$("header nav ul.quicklinks li a#more-link").click(function() {
+		$(this).parent().hide();
+		$("header nav ul.quicklinks li.more").css("display", "inline-block");
 	});
 	
-	$("#post-title input").blur(function() {
-		newvalue = $("#post-title input").val();
-		$("#post-title-view h2").html(newvalue);
-		
-		// show the static display
-		$("#post-title").hide();
-		$("#post-title-view").show();
-	});
-	
-	// Post management live filter
+	/* Post management live filter */
 	$("#searchbar").keyup(function() {
 		value = $(this).val();
 		$(".post-listing tbody tr").show();
@@ -38,34 +27,40 @@ $(document).ready(function() {
 		
 		// Show/hide proper form elements depending on type
 		type = $(this).html();
-		$("form#new-post-form #post-title").hide(); 
 		$("form#new-post-form #post-type").attr("value", type);
 		if (type == 'Text') {
-			$("form#new-post-form #post-title-view").show(); 
+			$("form#new-post-form #post-title").show(); 
 			$("form#new-post-form #post-link").hide();
 			$("form#new-post-form #post-image").hide();
 			$("form#new-post-form #post-text").show();
 		} else if (type == 'Quote') {
-			$("form#new-post-form #post-title-view").show(); 
+			$("form#new-post-form #post-title").show(); 
 			$("form#new-post-form #post-link").hide();
 			$("form#new-post-form #post-image").hide();
 			$("form#new-post-form #post-text").show();
 		} else if (type == 'Link') {
-			$("form#new-post-form #post-title-view").show(); 
+			$("form#new-post-form #post-title").show(); 
 			$("form#new-post-form #post-link").show();
 			$("form#new-post-form #post-image").hide();
 			$("form#new-post-form #post-text").show();
 		} else if (type == 'Image') {
-			$("form#new-post-form #post-title-view").show(); 
+			$("form#new-post-form #post-title").show(); 
 			$("form#new-post-form #post-link").hide();
 			$("form#new-post-form #post-image").show();
 			$("form#new-post-form #post-text").show();
 		} else if (type == 'Page') {
-			$("form#new-post-form #post-title-view").show(); 
+			$("form#new-post-form #post-title").show(); 
 			$("form#new-post-form #post-link").hide();
 			$("form#new-post-form #post-image").hide();
 			$("form#new-post-form #post-text").show();
 		}
+	});
+	
+	
+	$("#post-text textarea").bind("keyup", function() {
+		converter = new Showdown.converter();
+		text = converter.makeHtml($("#post-text textarea").val());
+		$("#markdownpreview").html(text);
 	});
 	
 	$("#linky-text").trigger("click");
