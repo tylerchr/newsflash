@@ -11,7 +11,7 @@ class Newsflash {
 		
 		$admin_bar = "";
 		// check if we are authenticated as an administrator
-		if ($_SESSION['auth_loggedin'] == true) {
+		if (isset($_SESSION['auth_loggedin']) && $_SESSION['auth_loggedin'] == true) {
 			$admin_bar = "<nav>
 				<ul>
 					<li>Logged in as me</li>

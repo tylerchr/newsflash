@@ -15,9 +15,8 @@ class mysql {
 	
 	public function Connect() {
 		
-		$opt = new Options();
-		
-		$this->mysqli = new mysqli($opt->ValueForKey("database/host"), $opt->ValueForKey("database/username"), $opt->ValueForKey("database/password"), $opt->ValueForKey("database/database"));
+		require(dirname(__FILE__) . '/../configuration.php');		
+		$this->mysqli = new mysqli($nf['database']['host'], $nf['database']['username'], $nf['database']['password'], $nf['database']['database']);
 		if (mysqli_connect_errno()) {
 			$this->mysqli = null;
 			return mysqli_connect_error();

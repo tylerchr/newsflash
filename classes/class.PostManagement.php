@@ -183,11 +183,19 @@ class PostManagement {
 				$category_list = array();
 	
 				while ($stmt->fetch()) {
+					
+					// get the category index
+					$index = -1;
 					if (!is_null($pcategory)) {
-						$category_list[$pcategory]++;
-					} else {
-						$category_list[-1]++;
+						$index = strval($pcategory);
 					}
+					
+					// initialize the category in the array if it doesn't exist yet
+					if (!isset($category_list[$index]))
+						$category_list[$index] = 0;	
+						
+					// increase the count
+					$category_list[$index]++;
 					
 				}
 				return $category_list;
@@ -215,6 +223,9 @@ class PostManagement {
 				while ($stmt->fetch()) {
 					
 					$month = date("F Y", $core->TimeFromUniversal($pdate));
+					if (!isset($dates[$month]['count']))
+						$dates[$month]['count'] = 0;
+					
 					$dates[$month]['year'] = date("Y", $core->TimeFromUniversal($pdate));
 					$dates[$month]['month'] = date("n", $core->TimeFromUniversal($pdate));
 					$dates[$month]['day'] = date("j", $core->TimeFromUniversal($pdate));
@@ -289,6 +300,9 @@ class PostManagement {
 		$opt = new Options();
 		
 		// generate the WHERE statement
+		$query_where = "";
+		$whereVariableTypes = array();
+		$whereVariables = array();
 		if (count($filter) > 0) {
 			foreach ($filter as $key => $value) {
 				
@@ -358,7 +372,7 @@ class PostManagement {
 	}
 	
 	public function CountPostsForFilter($filter=array()) {
-		$metaquery = $this->_GenerateQueryFromFilterAndPage($filter, $page);
+		$metaquery = $this->_GenerateQueryFromFilterAndPage($filter);
 		$index = strpos($metaquery['query'], " FROM");
 		$count_query = "SELECT COUNT(*) " . substr($metaquery['query'], $index);
 		

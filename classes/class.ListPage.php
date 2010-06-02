@@ -19,7 +19,7 @@ class ListPage extends Page {
 		$PageConfig->variables->nf_page_title = $opt->ValueForKey("blog/title");
 		
 		// render the page
-		if ($PageConfig->PostListStyle == 'condensed') {
+		if (isset($PageConfig->PostListStyle) && $PageConfig->PostListStyle == 'condensed') {
 			$PageConfig->variables->nf_posts = $this->FormatCondensedPosts($post_data['posts'], $PageConfig);
 		} else {
 			if (count($post_data['posts']) > 0) {

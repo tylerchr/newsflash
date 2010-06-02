@@ -10,12 +10,19 @@ class Page {
 	private $theme;
 	private $page;
 	
+	private $tmp_PageConfig;
+	
 	public function __construct() {
 		
+		$opt = new Options();		
 		$vars = $this->_ReadPageVariables();
+		$pagedata = array(
+			"page" => $vars['page'],
+			"results" => -1
+		);
 		
 		$this->SetPageVariables($vars);
-		$this->SetPageData(array("page" => $vars['page']));
+		$this->SetPageData($pagedata);
 	}
 	
 	private function _ReadPageVariables() {
@@ -87,6 +94,8 @@ class Page {
 		$total_pages = $pageData['total_pages'];
 		
 		// get the string of pre-existing variables, to which we'll append the new page#
+		$gets = array();
+		$getstring = "";
 		foreach ($_GET as $key => $value) {
 			if ($key != "p")
 				$gets[] = $key."=".$value;	
@@ -137,8 +146,10 @@ class Page {
 		
 		$PageConfig->variables->nf_siteroot =		$siteroot;
 		
+		/*
 		if (method_exists($post, 'TagCloud'))
 			$tags->nf_post_tags =		$post->TagCloud();
+		*/
 		
 		return $PageConfig;		
 	}
@@ -154,7 +165,7 @@ class Page {
 		// If theme files exist, set it up and return true
 		if (is_dir($path)) {
 			$this->theme = $theme_name;
-			$this->theme_path = $absolute_path . 'themes/' . $this->theme . '/';
+			$this->theme_path = $path_absolute . 'themes/' . $this->theme . '/';
 			$this->theme_url = $path_siteroot . 'themes/' . $this->theme . '/';	
 			return true;
 		} else {
@@ -163,6 +174,7 @@ class Page {
 	}
 	
 	public function OpenTemplate($template, $PageConfig) {
+		
 		require(dirname(__FILE__) . '/../configuration.php');
 		
 		$opt = new Options();

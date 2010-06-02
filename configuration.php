@@ -30,7 +30,7 @@ $nf['database']['options_table'] =	'options';
 // $nf['template']['post_link'] =		'post_link.html';
 // $nf['template']['post_image'] =		'post_image.html';
 
-// $nf['posts']['posts_per_page'] =	1;
+$nf['posts']['posts_per_page'] =	10;
 
 // $nf['error']['no_posts'] =			'<p class="nf-error-text">There aren\'t any posts to show here!</p>';
 

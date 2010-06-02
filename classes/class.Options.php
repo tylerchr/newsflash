@@ -13,14 +13,24 @@ class Options {
 	
 	public function ValueForKey($key) {
 		
+		// if no cache exists, create it
+		if (!isset($_SESSION['nf_options'])) {
+			$_SESSION['nf_options'] = $this->_BuildCache();
+		}
+		
 		/*
 		keys can be multidimensional with slashes using the format "parent/middleman/child"
 		for example, $nf['blog']['title'] in the configuration file is "blog/title"
 		*/
 		
-		// try getting it from configuration.php
+		// try the local options cache
+		if ($this->_CacheContainsKey($key))
+			return $this->_CacheValueForKey($key);
+		
+		// failing that, try getting it from configuration.php
 		if ($this->_ConfigFileContainsKey($key))
 			return $this->_ConfigFileValueForKey($key);
+		
 			
 		// failing that, try for the database
 		if ($this->_DatabaseContainsKey($key))
@@ -41,8 +51,83 @@ class Options {
 	}
 	
 	//
+	// private (cache) methods
+	//
+	
+	private function _CacheValueForKey($key) {
+		if (!isset($_SESSION['nf_options']))
+			return false;
+				
+		$cache = $_SESSION['nf_options'];
+		if (isset($cache[$key]))
+			return $cache[$key];
+			
+		return false;
+	}
+	
+	private function _BuildCache() {
+		$array = $this->_DatabaseGetAllPairs();
+		foreach ($array as $key => $value) {
+			// $this->_AddKeyValueToCache($key, $value);	
+			$new_cache[$key] = $value;
+		}
+		
+		$conf = $this->_ConfigFileGetAllPairs();
+		foreach ($conf as $key => $value) {
+			$new_cache[$key] = $value;
+		}
+		
+		return $new_cache;
+	}
+	
+	private function _AddKeyValueToCache($key, $value) {
+		$_SESSION[$key] = $value;	
+	}
+	
+	private function _CacheContainsKey($key) {
+		
+		if (!isset($_SESSION['nf_options']))
+			return false;
+		
+		$cache = $_SESSION['nf_options'];
+		return isset($cache[$key]);
+		
+	}
+	
+	private function _CacheContainsValue($search_value) {
+		
+		if (!isset($_SESSION['nf_options']))
+			return false;
+		
+		$cache = $_SESSION['nf_options'];
+		foreach ($cache as $value) {
+			if ($value == $search_value)
+				return true;
+		}
+		
+		return false;
+		
+	}
+	
+	//
 	// private (configuration.php-based) methods
 	//
+	
+	private function _ConfigFileGetAllPairs() {
+		require(dirname(__FILE__) . '/../configuration.php');
+		return $this->_CFIterate($nf);
+	}
+	
+	private function _CFIterate($array, $pre="", $results=array()) {
+		foreach ($array as $key => $value) {
+			if (is_array($value)) {
+				$results = $this->_CFIterate($value, $pre.$key.'/', $results);	
+			} else {
+				$results[$pre.$key] = $value;
+			}
+		}
+		return $results;
+	}
 	
 	private function _ConfigFileSetValueForKey($value, $key) {
 		
@@ -100,6 +185,37 @@ class Options {
 	//
 	// private (database-based) methods
 	//
+	
+	private function _DatabaseGetAllPairs() {
+		
+		require(dirname(__FILE__) . '/../configuration.php');
+		$sql = new mysql();
+		
+		if ($stmt = $sql->mysqli->prepare('SELECT option_key, option_value FROM ' . $nf['database']['table_prefix'] . $nf['database']['options_table'])) {
+			
+			$values = array();
+			if ($stmt->execute()) {
+				$stmt->bind_result($key, $value);
+				while ($stmt->fetch()) {
+					$values[$key] = $value;	
+				}
+			} else {
+				echo $sql->mysqli->error();	
+			}
+			
+			// return the result	
+			if (count($values) > 0) {
+				// returns the first result, even if multiple are found
+				return $values;
+			}
+		
+		} else {
+			echo $sql->mysqli->error;	
+		}
+		
+		return false;
+		
+	}
 	
 	private function _DatabaseSetValueForKey($value, $key) {
 		

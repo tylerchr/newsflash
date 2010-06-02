@@ -22,6 +22,10 @@ class TagManagement {
 					if (count($tagstring) > 0) {
 						foreach ($tagstring as $value) {
 							if (strlen($value) > 0) {
+								
+								if (!isset($tags[$value]))
+									$tags[$value] = 0;
+								
 								$tags[$value]++;
 							}
 						}	
