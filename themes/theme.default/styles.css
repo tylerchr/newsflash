@@ -2,7 +2,7 @@ body {
 	margin: 0;
 	padding: 0;
 	
-	font-family: Helvetica, Arial, Verdana;
+	font-family: Times, 'BitstreamVeraSans', 'Lucida Grande', Verdana, Arial, sans-serif;
 	background-color: #fff;
 }
 
@@ -25,7 +25,7 @@ header {
 	margin-top: 100px;
 	
 	width: 680px;
-	font-family: 'Lucida Grande', Verdana, 'Bitstream Vera Sans', Arial, sans-serif;
+	font-family: 'BitstreamVeraSans', 'Lucida Grande', Verdana, Arial, sans-serif;
 }
 
 header h1 a {
@@ -79,6 +79,15 @@ h3 {
 	top: 0;
 	right: 0px;
 	width: 240px;
+	
+	font-family: 'BitstreamVeraSans';
+	font-size: 13px;
+	
+	opacity: 0.8;
+}
+
+#sidebar:hover {
+	opacity: 1.0;	
 }
 
 #sidebar h3 {
@@ -86,7 +95,7 @@ h3 {
 	border: 0;
 	padding: 0;
 	padding-bottom: 5px;
-	border-bottom: 1px solid #eee;	
+	border-bottom: 1px solid #eee;
 	
 	font-size: 1.0em;
 }
@@ -94,7 +103,7 @@ h3 {
 #sidebar ul {
 	list-style-type: square;
 	color: #555;	
-	font-size: 0.9em;
+	font-size: 1.0em;
 	
 	margin: 0;
 	padding: 0;
@@ -235,9 +244,9 @@ section.nf-post {
 }
 
 .nf-post {
-	font-family: 'Lucida Grande', Verdana, 'Bitstream Vera Sans', Arial, sans-serif;
+	font-family: 'BitstreamVeraSans', 'Lucida Grande', Verdana, Arial, sans-serif;
 	font-size: 12px;
-	line-height: 22px;
+	line-height: 1.85em;
 	
 	color: #333;
 }
@@ -344,7 +353,7 @@ ul.tag-list li a {
 	color: #2fa6e9;
 	
 	text-decoration: none;
-	-webkit-border-radius: 5px;
+	-webkit-border-radius: 3px;
 }
 
 ul.tag-list li a:hover {
@@ -374,4 +383,40 @@ ul.tag-list li a:hover {
 #author-meta {
 	float: left;
 	width: 500px;
+}
+
+/*
+ * @font-face declarations
+ */
+ 
+@font-face {
+	font-family: 'BitstreamVeraSans';
+	src: url('type/vera-webfont.eot');
+	src: local('☺'), url('type/vera-webfont.woff') format('woff'), url('type/vera-webfont.ttf') format('truetype'), url('type/vera-webfont.svg#webfontMWOvc0iQ') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'BitstreamVeraSans';
+	src: url('type/vera-italic-webfont.eot');
+	src: local('☺'), url('type/vera-italic-webfont.woff') format('woff'), url('type/vera-italic-webfont.ttf') format('truetype'), url('type/vera-italic-webfont.svg#webfonteFtYurEF') format('svg');
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'BitstreamVeraSans';
+	src: url('type/vera-bold-webfont.eot');
+	src: local('☺'), url('type/vera-bold-webfont.woff') format('woff'), url('type/vera-bold-webfont.ttf') format('truetype'), url('type/vera-bold-webfont.svg#webfontd2VRdEfM') format('svg');
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'BitstreamVeraSans';
+	src: url('type/vera-bold-italic-webfont.eot');
+	src: local('☺'), url('type/vera-bold-italic-webfont.woff') format('woff'), url('type/vera-bold-italic-webfont.ttf') format('truetype'), url('type/vera-bold-italic-webfont.svg#webfontwb747aiB') format('svg');
+	font-weight: bold;
+	font-style: italic;
 }
