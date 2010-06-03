@@ -12,7 +12,6 @@ class Options {
 	}
 	
 	public function ValueForKey($key) {
-		
 		// if no cache exists, create it
 		if (!isset($_SESSION['nf_options'])) {
 			$_SESSION['nf_options'] = $this->_BuildCache();
@@ -38,8 +37,6 @@ class Options {
 			
 		// failing that, report failure
 		return false;
-		
-			
 	}
 	
 	public function ContainsKey($key) {
@@ -48,6 +45,20 @@ class Options {
 	
 	public function ContainsValue($value) {
 		return ($this->_ConfigFileContainsValue($value) || $this->_DatabaseContainsValue($value));
+	}
+	
+	// per-store valueForKey methods
+	
+	public function CacheValueForKey($key) {
+		return $this->_CacheValueForKey($key);	
+	}
+	
+	public function ConfigFileValueForKey($key) {
+		return $this->_ConfigFileValueForKey($key);	
+	}
+	
+	public function DatabaseValueForKey($key) {
+		return $this->_DatabaseValueForKey($key);	
 	}
 	
 	//

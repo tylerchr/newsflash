@@ -6,9 +6,10 @@
 $nf['blog']['subtitle'] =			'Blogging about a new way to blog';
 // $nf['blog']['timezone'] =			-7;
 
-$nf['paths']['siteroot'] =			'http://jauntyserv.local/newsflash/';
-$nf['paths']['absolute'] =			$path = dirname(__FILE__) . '/';
+$nf['paths']['siteroot'] =			'http://jauntyserv.local/newsflash/';		// RECOMMENDED
+$nf['paths']['absolute'] =			$path = dirname(__FILE__) . '/';			// RECOMMENDED
 $nf['paths']['packages'] =			"./packages/";
+$nf['paths']['cache'] =				"cache";									// RECOMMENDED
 $nf['plugins']['plugins'] =			array();
 
 // These database settings MUST be defined in this file
@@ -23,15 +24,11 @@ $nf['database']['category_table'] =	'categories';
 $nf['database']['author_table'] =	'authors';
 $nf['database']['options_table'] =	'options';
 
-// $nf['template']['main'] =			'main.php';
-// $nf['template']['page'] =			'page.html';
-// $nf['template']['author'] =			'author.html';
-// $nf['template']['post_text'] =		'post_text.html';
-// $nf['template']['post_link'] =		'post_link.html';
-// $nf['template']['post_image'] =		'post_image.html';
-
+// post settings
 $nf['posts']['posts_per_page'] =	10;
 
-// $nf['error']['no_posts'] =			'<p class="nf-error-text">There aren\'t any posts to show here!</p>';
+// cache settings
+$nf['cache']['enabled'] =			true;										// RECOMMENDED
+$nf['cache']['ttl'] =				10; // in seconds							// RECOMMENDED
 
 ?>
