@@ -51,7 +51,7 @@ class AuthorPage extends Page {
 		return $PageConfig;
 	}
 	
-	public function FormatPost($post, $PageConfig) {
+	public function FormatPost($post, $PageConfig, $highlight=array()) {
 			
 		$pm = new PostManagement();
 		$opt = new Options();

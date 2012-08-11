@@ -12,11 +12,11 @@ class ArchivePage extends Page {
 	private $day;
 	
 	public function SetPageVariables($vars) {
-		if ($vars['year'] > 0)
+		if (isset($vars['year']) && $vars['year'] > 0)
 			$this->SetYear($vars['year']);
-		if ($vars['month'] > 0)	
+		if (isset($vars['month']) && $vars['month'] > 0)	
 			$this->SetMonth($vars['month']);
-		if ($vars['day'] > 0)
+		if (isset($vars['day']) && $vars['day'] > 0)
 			$this->SetDay($vars['day']);
 	}
 	
@@ -80,10 +80,11 @@ class ArchivePage extends Page {
 		$pm = new PostManagement();
 		$post_data = $pm->GetPostsFrom($this->GetYear(), $this->GetMonth(), $this->GetDay(), $this->getPageData());
 		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
+                $PageConfig = new PageConfig('archive');
 		$PageConfig->variables->nf_page_title = 'Archives for ' . $this->TimePeriodString();
 		
 		// render the page
-		if ($PageConfig->PostListStyle == 'condensed') {
+		if (isset($PageConfig->PostListStyle) && $PageConfig->PostListStyle == 'condensed') {
 			$PageConfig->variables->nf_posts = $this->FormatCondensedPosts($post_data['posts'], $PageConfig);
 		} else {
 			if (count($post_data['posts']) > 0) {

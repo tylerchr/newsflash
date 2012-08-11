@@ -34,14 +34,16 @@ class CategoryPage extends Page {
 		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
 		$cm = new CategoryManagement();
 		$category = $cm->GetCategoryWithID($this->GetCategoryID());
-		$cname = $category->name;
-		if (strlen($cname) == 0) {
-			$cname = 'Unfiled';	
-		}
+		if (!$category) {
+                    $cname = 'Unfiled';	
+		} else {
+                    $cname = $category->name;
+                }
+                $PageConfig = new PageConfig('category');
 		$PageConfig->variables->nf_page_title = $cname . ' - ' . $opt->ValueForKey("blog/title");
 		
 		// render the page
-		if ($PageConfig->PostListStyle == 'condensed') {
+		if (isset($PageConfig->PostListStyle) && $PageConfig->PostListStyle == 'condensed') {
 			$PageConfig->variables->nf_posts = $this->FormatCondensedPosts($posts, $PageConfig);
 		} else {
 			if (count($posts) > 0) {

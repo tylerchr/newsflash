@@ -31,12 +31,13 @@ class LiteralPage extends Page {
 		
 		$pam = new PageManagement();
 		$posts = $pam->GetCertainPage($this->GetPageID());
-		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
+		// $this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
+                $PageConfig = new PageConfig('literal');
 		$PageConfig->variables->nf_page_title = $posts[0]->title . ' - ' . $opt->ValueForKey("blog/title");
 		$PageConfig->type = 'page';
 		
 		// render the page
-		if ($PageConfig->PostListStyle == 'condensed') {
+		if (isset($PageConfig->PostListStyle) && $PageConfig->PostListStyle == 'condensed') {
 			$PageConfig->variables->nf_posts = $this->FormatCondensedPosts($posts, $PageConfig);
 		} else {
 			if (count($posts) > 0) {
@@ -52,7 +53,7 @@ class LiteralPage extends Page {
 		return $PageConfig;
 	}
 	
-	public function FormatPost($post, $PageConfig) {
+	public function FormatPost($post, $PageConfig, $highlight=array()) {
 		
 		$core = new Core();
 		$opt = new Options();

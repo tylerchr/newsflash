@@ -32,10 +32,11 @@ class TagPage extends Page {
 		$post_data = $pm->GetPostsTaggedWith($this->GetTag(), $this->getPageData());
 		$posts = $post_data['posts'];
 		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
+                $PageConfig = new PageConfig('tag');
 		$PageConfig->variables->nf_page_title = 'Tagged with \'' . $this->GetTag() . '\' - ' . $opt->ValueForKey("blog/title");
 		
 		// render the page
-		if ($PageConfig->PostListStyle == 'condensed') {
+		if (isset($PageConfig->PostListStyle) && $PageConfig->PostListStyle == 'condensed') {
 			$PageConfig->variables->nf_posts = $this->FormatCondensedPosts($posts, $PageConfig);
 		} else {
 			if (count($posts) > 0) {

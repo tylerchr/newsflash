@@ -145,6 +145,9 @@ class Page {
 		$PageConfig->variables->nf_search_bar =		$this->GetSearchBar();
 		
 		$PageConfig->variables->nf_siteroot =		$siteroot;
+                
+                // Conditional tags
+                $PageConfig->variables->nf_administration_bar = "";
 		
 		/*
 		if (method_exists($post, 'TagCloud'))
@@ -188,12 +191,23 @@ class Page {
 		
 		return $page;	
 	}
+        
+        public function GetPostTags($post) {
+            $tag_strings = explode(";", $post->tags);
+            $tags = array();
+            if (count($tag_strings) > 0) {
+                foreach ($tag_strings as $tag_string) {
+                    $tags[] = '<a href="tag.php?tag=' . $tag_string . '">' . $tag_string . '</a>';
+                }
+            }
+            return implode(", ", $tags);
+        }
 	
 	public function FormatPost($post, $PageConfig, $highlight=array()) {
 		
 		$core = new Core();
 		$opt = new Options;
-		
+                	
 		// Assign post-related tags
 		$PageConfig->variables->nf_post_id =		$post->id;
 		$PageConfig->variables->nf_post_type =		$post->type;
@@ -206,7 +220,8 @@ class Page {
 		$PageConfig->variables->nf_image_image =	$post->image;
 		$PageConfig->variables->nf_post_category =	'<a href="category.php?cid=' . $post->category_id . '">' . $post->category . '</a>';
 		$PageConfig->variables->nf_post_permalink =	$opt->ValueForKey("paths/siteroot") . 'post.php?post=' . $post->id;
-		
+		$PageConfig->variables->nf_post_tags =          $this->GetPostTags($post);
+                
 		$post_html = $this->OpenTemplate('post_' . $post->type, $PageConfig);
 		
 		return $post_html;

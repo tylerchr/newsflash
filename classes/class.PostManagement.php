@@ -345,7 +345,7 @@ class PostManagement {
 				}
 			}
 			
-			if (strlen($filter['_separator']) > 0) {
+			if (array_key_exists('_separator', $filter) && strlen($filter['_separator']) > 0) {
 				$separator = $filter['_separator'];
 			} else {
 				$separator = "AND";	
@@ -382,7 +382,7 @@ class PostManagement {
 			
 			// attach the parameters, if there are any
 			if (count($metaquery['variable_types']) > 0) {
-				call_user_func_array(array($stmt, 'bind_param'), $metaquery['variables']);
+				call_user_func_array(array($stmt, 'bind_param'), $this->_MakeValuesReferenced($metaquery['variables']));
 			}
 			
 			if ($stmt->execute()) {
@@ -395,6 +395,13 @@ class PostManagement {
 		
 		return -1;
 	}
+        
+        function _MakeValuesReferenced($arr){
+            $refs = array();
+            foreach($arr as $key => $value)
+                $refs[$key] = &$arr[$key];
+            return $refs;
+        }
 	
 	public function GetPostsThroughFilter($filter=array(), $page=0) {
 		
@@ -408,7 +415,7 @@ class PostManagement {
 			
 			// attach the parameters, if there are any
 			if (count($metaquery['variable_types']) > 0) {
-				call_user_func_array(array($stmt, 'bind_param'), $metaquery['variables']);
+                            call_user_func_array(array($stmt, 'bind_param'), $this->_MakeValuesReferenced($metaquery['variables']));
 			}
 			
 			$stmt->bind_result($pid, $ptype, $ptitle, $pslug, $pauthor, $ptext, $plink, $pimage, $pdate, $pcategory, $ptags);

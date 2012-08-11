@@ -34,10 +34,11 @@ class SearchPage extends Page {
 		$post_data = $pm->GetPostsMatchingQuery($this->GetQuery(), $this->getPageData());
 		$posts = $post_data['posts'];
 		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
-		$PageConfig->variables->nf_page_title = 'Results for \'' . $PageConfig->searchQuery . '\' - ' . $opt->ValueForKey("blog/title");
+                $PageConfig = new PageConfig('search');
+		$PageConfig->variables->nf_page_title = 'Results for \'' . $this->GetQuery() . '\' - ' . $opt->ValueForKey("blog/title");
 		
 		// render the page
-		if ($PageConfig->PostListStyle == 'condensed') {
+		if (isset($PageConfig->PostListStyle) && $PageConfig->PostListStyle == 'condensed') {
 			$PageConfig->variables->nf_posts = $this->FormatCondensedPosts($posts, $PageConfig);
 		} else {
 			if (count($posts) > 0) {

@@ -26,7 +26,7 @@ if ($final_page = $bc->GetCacheResource($id)) {
 	$page = new ListPage($options);
 	$final_page = $nf->GetFinal($page);
 	
-	$bc->SaveCacheResource($id, $final_page);	
+	$bc->SaveCacheResource($id, $final_page);
 }
 
 echo $final_page;

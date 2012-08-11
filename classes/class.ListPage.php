@@ -16,6 +16,7 @@ class ListPage extends Page {
 		$pageNumber = $this->getPageData();
 		$post_data = $pm->GetPosts(null, $this->getPageData());
 		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
+                $PageConfig = new PageConfig('list');
 		$PageConfig->variables->nf_page_title = $opt->ValueForKey("blog/title");
 		
 		// render the page

@@ -6,7 +6,7 @@
 $nf['blog']['subtitle'] =			'Blogging about a new way to blog';
 // $nf['blog']['timezone'] =			-7;
 
-$nf['paths']['siteroot'] =			'http://jauntyserv.local/newsflash/';		// RECOMMENDED
+$nf['paths']['siteroot'] =			'http://pdev.local/newsflash/';		// RECOMMENDED
 $nf['paths']['absolute'] =			$path = dirname(__FILE__) . '/';			// RECOMMENDED
 $nf['paths']['packages'] =			"./packages/";
 $nf['paths']['cache'] =				"cache";									// RECOMMENDED

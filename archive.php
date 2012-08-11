@@ -9,7 +9,7 @@ require('classes/classes.php');
 require('configuration.php');
 
 $nf = new Newsflash();
-$page = new ArchivePage($_GET['year'], $_GET['month'], $_GET['day']);
+$page = new ArchivePage();
 echo $nf->GetFinal($page);
 
 ?>
