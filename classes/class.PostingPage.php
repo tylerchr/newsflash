@@ -33,6 +33,7 @@ class PostingPage extends Page {
 		$posts = array($post_data['posts'][$this->GetPostID()]);
 
 		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
+                $PageConfig = new PageConfig('posting');
 		$PageConfig->variables->nf_page_title = $posts[0]->title . ' - ' . $opt->ValueForKey("blog/title");
 		$PageConfig->variables->nf_posts = $this->FormatPost($posts[0], $PageConfig);
 		

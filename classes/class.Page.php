@@ -238,6 +238,7 @@ class Page {
 		if (count($posts) > 0) {
 			
 			$current_month = NULL;
+                        $post_all = '';
 			foreach ($posts as $single_post) {
 				$month = date("F Y", $single_post->date);
 				if ($month != $current_month) {

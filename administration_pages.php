@@ -6,6 +6,7 @@ function posts() {
 	$pm = new PostManagement();
 	$posts = $pm->GetPosts();
 	
+        $listing = '';
 	foreach ($posts['posts'] as $post) {
 		$comments = rand(0,5);
 		if ($comments > 0) {
@@ -50,19 +51,36 @@ function posts() {
 function posts_write() {
 		
 	$pm = new PostManagement();
-	
+        $prefilled_strings = array();
+        
 	// Discover if we're editing or posting
-	$post = $_GET['post'];
-	if ($post > 0) {
-		$edit = $pm->GetCertainPost($post);
-	}
-	$post_data = $edit['posts'][$post];
-	
-	if (strlen($post_data->title) > 0) {
-		$display_title = $post_data->title;	
-	} else {
-		$display_title = '[ Click to type title ]';
-	}
+        if (isset($_GET['post'])) {
+            // Editing
+            $post = $_GET['post'];
+            if ($post > 0) {
+                    $edit = $pm->GetCertainPost($post);
+            }
+            $post_data = $edit['posts'][$post];
+            
+            $prefilled_strings = array(
+                'display_title' => $post_data->title,
+                'id' => $post_data->id,
+                'type' => $post_data->type,
+                'link' => $post_data->link,
+                'image' => $post_data->image,
+                'text' => $post_data->text
+            );
+        } else {
+            // New post
+            $prefilled_strings = array(
+                'display_title' => '[ Click to type title ]',
+                'id' => '',
+                'type' => '',
+                'link' => '',
+                'image' => '',
+                'text' => ''
+            );
+        }
 	
 	$pageListing = '
 	<form id="new-post-form" action="administration.php?add-save" method="post">
@@ -76,23 +94,23 @@ function posts_write() {
 		
 		<span class="data-container" id="post-title">
 			<h4 class="caption">Post title</h4>
-			<input type="text" name="title" value="' . $display_title . '" />
+			<input type="text" name="title" value="' . $prefilled_strings["display_title"] . '" />
 		</span>
 		
-		<input type="hidden" id="post-id" name="id" value="' . $post_data->id . '" />
-		<input type="hidden" id="post-type" name="type" value="' . $post_data->type . '" />
+		<input type="hidden" id="post-id" name="id" value="' . $prefilled_strings["id"] . '" />
+		<input type="hidden" id="post-type" name="type" value="' . $prefilled_strings["type"] . '" />
 		
 		<span class="data-container" id="post-link">
 			<h4 class="caption">Link URL</h4>
-			<input type="text" name="link" id="post-link" value="' . $post_data->link . '" />
+			<input type="text" name="link" id="post-link" value="' . $prefilled_strings["link"] . '" />
 		</span>
 		<span class="data-container" id="post-image">
 			<h4 class="caption">Image URL</h4>
-			<input type="text" name="image" id="post-image" value="' . $post_data->image . '" />
+			<input type="text" name="image" id="post-image" value="' . $prefilled_strings["image"] . '" />
 		</span>
 		
 		<span class="data-container" id="post-text">
-			<textarea id="new-post" name="text">' . $post_data->text . '</textarea>
+			<textarea id="new-post" name="text">' . $prefilled_strings["text"] . '</textarea>
 		</span>
 		
 		<div id="edit-post-button-bar">
@@ -356,7 +374,5 @@ function login_page() {
 	return $content;
 	
 }
-
-echo $finalPage;
 
 ?>

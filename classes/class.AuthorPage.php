@@ -30,12 +30,13 @@ class AuthorPage extends Page {
 		
 		$am = new AuthorManagement();
 		$posts = $am->GetCertainAuthor($this->GetAuthorID());
-		$this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
+		// $this->setPageData(array("page" => $post_data['page'], "results" => $post_data['results']));
+                $PageConfig = new PageConfig('author');
 		$PageConfig->variables->nf_page_title = 'Posts by ' . $posts[0]->first_name . ' ' . $posts[0]->last_name . ' - ' . $opt->ValueForKey("blog/title");
 		$PageConfig->type = 'author';
 		
 		// render the page
-		if ($PageConfig->PostListStyle == 'condensed') {
+		if (isset($PageConfig->PostListStyle) && $PageConfig->PostListStyle == 'condensed') {
 			$PageConfig->variables->nf_posts = $this->FormatCondensedPosts($posts, $PageConfig);
 		} else {
 			if (count($posts) > 0) {

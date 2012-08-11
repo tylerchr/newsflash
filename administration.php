@@ -12,7 +12,9 @@ require('administration_pages.php');
 function get_params() {
 
 	$vars = explode('?', $_SERVER['REQUEST_URI']);
-	$split = explode('&', $vars[1]);
+        $split = array();
+        if (count($vars) > 1)
+            $split = explode('&', $vars[1]);
 	return $split;
 	
 }
@@ -21,7 +23,7 @@ function bootstrap_page() {
 	
 	$split = get_params();
 	
-	if (strlen($split[0]) > 0) {
+	if (count($split) > 0 && strlen($split[0]) > 0) {
 	
 		$function_name = str_ireplace("/", "_", $split[0]);
 		$function_name = str_ireplace("-", "", $function_name);
